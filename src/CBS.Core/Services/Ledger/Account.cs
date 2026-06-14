@@ -1,0 +1,50 @@
+﻿namespace CBS.Core.Services.Ledger;
+
+public enum Currency { Ruble, Dollar, Euro }
+
+public class Account(Guid clientId, Currency currency)
+{
+  public Guid Id { get; } = Guid.NewGuid();
+  public Guid ClientId { get; } = clientId;
+  public Currency Currency { get; } = currency;
+
+  private decimal _balance;
+  public decimal Balance => _balance;
+
+  private bool _isBlocked;
+
+  public void Debit(decimal amount)
+  {
+    if (_balance - amount < 0)
+    {
+      throw new InvalidOperationException();
+    }
+    
+    _balance -= amount;
+  }
+
+  public void Credit(decimal amount)
+  {
+    _balance += amount;
+  }
+
+  public void Block()
+  {
+    if (_isBlocked)
+    {
+      throw new InvalidOperationException();
+    }
+
+    _isBlocked = true;
+  }
+
+  public void Unblock()
+  {
+    if (!_isBlocked)
+    {
+      throw new InvalidOperationException();
+    }
+
+    _isBlocked = false;
+  }
+}
