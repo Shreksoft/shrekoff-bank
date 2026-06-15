@@ -2,6 +2,7 @@
 
 public interface IAccountRepository
 {
-  public Account? Find(Guid accountId);
+  public Account? FindById(Guid accountId);
+  public IReadOnlyCollection<Account> FindByClientId(Guid clientId);
   public void Save(Account account);
 }

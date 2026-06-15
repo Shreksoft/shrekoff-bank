@@ -4,21 +4,24 @@ public class InMemoryAccountRepository : IAccountRepository
 {
   private readonly Dictionary<Guid, Account> _accounts = [];
   
-  public Account? Find(Guid accountId)
+  public Account? FindById(Guid accountId)
   {
     return _accounts.GetValueOrDefault(accountId);
   }
 
+  public IReadOnlyCollection<Account> FindByClientId(Guid clientId)
+  {
+    return _accounts.Values.Where(acc => acc.ClientId == clientId).ToArray();
+  }
+
   public void Save(Account account)
   {
-    Account? accountInDb = Find(account.Id);
-    if (accountInDb != null)
-    {
-      _accounts.Add(account.Id, account);
-    }
-    else
+    var memAcc = FindById(account.Id);
+    if (memAcc != null)
     {
       throw new InvalidOperationException();
     }
+
+    _accounts[account.Id] = account;
   }
 }
