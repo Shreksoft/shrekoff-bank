@@ -12,6 +12,7 @@ public class Account(Guid clientId, Currency currency)
   public decimal Balance => _balance;
 
   private bool _isBlocked;
+  public bool IsBlocked => _isBlocked;
 
   public void Debit(decimal amount)
   {
@@ -30,21 +31,11 @@ public class Account(Guid clientId, Currency currency)
 
   public void Block()
   {
-    if (_isBlocked)
-    {
-      throw new InvalidOperationException();
-    }
-
     _isBlocked = true;
   }
 
   public void Unblock()
   {
-    if (!_isBlocked)
-    {
-      throw new InvalidOperationException();
-    }
-
     _isBlocked = false;
   }
 }
