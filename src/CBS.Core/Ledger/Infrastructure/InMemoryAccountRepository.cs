@@ -1,4 +1,7 @@
-﻿namespace CBS.Core.Services.Ledger;
+﻿using CBS.Core.Ledger.Domain;
+using CBS.Core.Ledger.Services;
+
+namespace CBS.Core.Ledger.Infrastructure;
 
 public class InMemoryAccountRepository : IAccountRepository
 {

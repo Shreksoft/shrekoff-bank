@@ -1,4 +1,4 @@
-﻿namespace CBS.Core.Services.Ledger;
+﻿namespace CBS.Core.Ledger.Domain;
 
 public enum Currency { Ruble, Dollar, Euro }
 

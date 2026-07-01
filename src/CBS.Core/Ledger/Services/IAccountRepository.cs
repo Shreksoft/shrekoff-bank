@@ -1,4 +1,6 @@
-﻿namespace CBS.Core.Services.Ledger;
+﻿using CBS.Core.Ledger.Domain;
+
+namespace CBS.Core.Ledger.Services;
 
 public interface IAccountRepository
 {
