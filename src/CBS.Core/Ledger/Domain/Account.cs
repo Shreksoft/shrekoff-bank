@@ -13,19 +13,20 @@ public class Account(Guid clientId, Currency currency)
 
   private bool _isBlocked;
   public bool IsBlocked => _isBlocked;
-
+  
   public void Debit(decimal amount)
   {
-    if (_balance - amount < 0)
-    {
-      throw new InvalidOperationException();
-    }
+    if (_isBlocked) throw new InvalidOperationException("Account is blocked");
+    
+    if (amount > _balance) throw new InvalidOperationException();
     
     _balance -= amount;
   }
 
   public void Credit(decimal amount)
   {
+    if (_isBlocked) throw new InvalidOperationException("Account is blocked");
+    
     _balance += amount;
   }
 
