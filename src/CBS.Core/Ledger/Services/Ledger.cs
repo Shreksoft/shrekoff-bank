@@ -27,6 +27,9 @@ public class Ledger(IAccountRepository repository) : ILedger
   {
     var from = GetAccountOrThrow(accountFromId);
     var to = GetAccountOrThrow(accountToId);
+
+    if (from.Currency != to.Currency) 
+      throw new InvalidOperationException("Accounts doesn't have the same currency");
     
     from.Debit(amount);
     to.Credit(amount);
