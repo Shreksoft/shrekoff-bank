@@ -6,7 +6,7 @@ namespace CBS.Core.Ledger.Infrastructure;
 public class InMemoryAccountRepository : IAccountRepository
 {
   private readonly Dictionary<Guid, Account> _accounts = [];
-  
+
   public Account? FindById(Guid accountId)
   {
     return _accounts.GetValueOrDefault(accountId);
@@ -19,12 +19,6 @@ public class InMemoryAccountRepository : IAccountRepository
 
   public void Save(Account account)
   {
-    var memAcc = FindById(account.Id);
-    if (memAcc != null)
-    {
-      throw new InvalidOperationException();
-    }
-
     _accounts[account.Id] = account;
   }
 }
