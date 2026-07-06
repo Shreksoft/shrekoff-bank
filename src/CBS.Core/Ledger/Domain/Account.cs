@@ -1,4 +1,6 @@
-﻿namespace CBS.Core.Ledger.Domain;
+﻿using CBS.Core.Ledger.Domain.Exceptions;
+
+namespace CBS.Core.Ledger.Domain;
 
 public enum Currency { Ruble, Dollar, Euro }
 
@@ -13,20 +15,24 @@ public class Account(Guid clientId, Currency currency)
 
   private bool _isBlocked;
   public bool IsBlocked => _isBlocked;
-  
+
   public void Debit(decimal amount)
   {
-    if (_isBlocked) throw new InvalidOperationException("Account is blocked");
-    
-    if (amount > _balance) throw new InvalidOperationException();
-    
+    if (amount < 0) throw new AmountIsNegativeException(Id, amount);
+
+    if (_isBlocked) throw new AccountBlockedException(Id);
+
+    if (amount > _balance) throw new InsufficientFundsException(Id, Balance);
+
     _balance -= amount;
   }
 
   public void Credit(decimal amount)
   {
-    if (_isBlocked) throw new InvalidOperationException("Account is blocked");
-    
+    if (amount < 0) throw new AmountIsNegativeException(Id, amount);
+
+    if (_isBlocked) throw new AccountBlockedException(Id);
+
     _balance += amount;
   }
 
