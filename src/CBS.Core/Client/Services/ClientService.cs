@@ -20,4 +20,10 @@ class ClientService(IClientRepository repository)
 
     return client;
   }
+
+  public bool ClientExists(Guid clientId)
+  {
+    var client = repository.FindById(clientId);
+    return client != null;
+  }
 }
