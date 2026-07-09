@@ -2,7 +2,7 @@
 
 namespace CBS.Core.Ledger.Services;
 
-public class Ledger(IAccountRepository repository) : ILedger
+public class LedgerService(IAccountRepository repository) : ILedger
 {
   public Account CreateAccount(Guid clientId, Currency currency)
   {
@@ -28,9 +28,9 @@ public class Ledger(IAccountRepository repository) : ILedger
     var from = GetAccountOrThrow(accountFromId);
     var to = GetAccountOrThrow(accountToId);
 
-    if (from.Currency != to.Currency) 
+    if (from.Currency != to.Currency)
       throw new InvalidOperationException("Accounts doesn't have the same currency");
-    
+
     from.Debit(amount);
     to.Credit(amount);
   }
