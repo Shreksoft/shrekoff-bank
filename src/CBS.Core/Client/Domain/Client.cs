@@ -1,7 +1,7 @@
 namespace CBS.Core.Client.Domain;
 
 // record под копотом перегружает Equals, GetHashCode, ToString и операторы == != + деконструкция
-readonly record struct ClientInfo(string FirstName, string LastName, DateOnly BirthDate, string? Email, string? PhoneNumber);
+public readonly record struct ClientInfo(string FirstName, string LastName, DateOnly BirthDate, string? Email, string? PhoneNumber);
 
 class Client(ClientInfo clientInfo)
 {
