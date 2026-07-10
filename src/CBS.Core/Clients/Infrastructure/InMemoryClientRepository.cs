@@ -1,3 +1,4 @@
+using CBS.Core.Clients.Domain;
 using CBS.Core.Clients.Services;
 
 namespace CBS.Core.Clients.Infrastructure;
@@ -21,7 +22,7 @@ class InMemoryClientRepository : IClientRepository
     return _clients.Values.Where(client => client.Info.PhoneNumber == phoneNumber).ToArray();
   }
 
-  public void Save(Domain.Client client)
+  public void Save(Client client)
   {
     _clients[client.Id] = client;
   }
