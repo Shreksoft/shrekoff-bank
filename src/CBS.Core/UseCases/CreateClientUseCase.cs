@@ -14,7 +14,7 @@ public class CreateClientUseCase
 
   public Guid Execute(ClientInfo clientInfo)
   {
-    var client = _clientService.CreateClient(clientInfo);
-    return client.Id;
+    var id = _clientService.CreateClient(clientInfo);
+    return id;
   }
 }
