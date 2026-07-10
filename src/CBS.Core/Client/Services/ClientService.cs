@@ -4,21 +4,12 @@ namespace CBS.Core.Client.Services;
 
 class ClientService(IClientRepository repository)
 {
-  private const byte MinAge = 18;
-  private const ushort MinYear = 1900;
-
-  public Domain.Client CreateClient(ClientInfo info)
+  public Guid CreateClient(ClientInfo clientInfo)
   {
-    if (info.BirthDate.Year < MinYear)
-      throw new ArgumentException("Too old client");
-
-    if (DateTime.Now.Year - info.BirthDate.Year < MinAge)
-      throw new ArgumentException("Too young client");
-
-    var client = new Domain.Client(info);
+    var client = new Domain.Client(clientInfo);
     repository.Save(client);
 
-    return client;
+    return client.Id;
   }
 
   public bool ClientExists(Guid clientId)
