@@ -1,7 +1,7 @@
-﻿using CBS.Core.Ledger.Domain;
-using CBS.Core.Ledger.Services;
+﻿using CBS.Core.Accounts.Domain;
+using CBS.Core.Accounts.Services;
 
-namespace CBS.Core.Ledger.Infrastructure;
+namespace CBS.Core.Accounts.Infrastructure;
 
 public class InMemoryAccountRepository : IAccountRepository
 {

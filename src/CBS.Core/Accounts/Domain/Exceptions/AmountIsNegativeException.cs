@@ -1,4 +1,4 @@
-namespace CBS.Core.Ledger.Domain.Exceptions;
+namespace CBS.Core.Accounts.Domain.Exceptions;
 
 public sealed class AmountIsNegativeException(Guid accountId, decimal amount) : Exception($"Amount must be positive")
 {

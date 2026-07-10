@@ -1,5 +1,5 @@
-﻿using CBS.Core.Ledger.Domain;
-using CBS.Core.Ledger.Domain.Exceptions;
+﻿using CBS.Core.Accounts.Domain;
+using CBS.Core.Accounts.Domain.Exceptions;
 
 namespace CBS.Core.Tests;
 

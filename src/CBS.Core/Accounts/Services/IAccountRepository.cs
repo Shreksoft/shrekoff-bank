@@ -1,6 +1,6 @@
-﻿using CBS.Core.Ledger.Domain;
+﻿using CBS.Core.Accounts.Domain;
 
-namespace CBS.Core.Ledger.Services;
+namespace CBS.Core.Accounts.Services;
 
 public interface IAccountRepository
 {

@@ -1,8 +1,8 @@
-﻿using CBS.Core.Ledger.Domain;
+﻿using CBS.Core.Accounts.Domain;
 
-namespace CBS.Core.Ledger.Services;
+namespace CBS.Core.Accounts.Services;
 
-public class LedgerService(IAccountRepository repository) : ILedger
+public class AccountService(IAccountRepository repository)
 {
   public Account CreateAccount(Guid clientId, Currency currency)
   {

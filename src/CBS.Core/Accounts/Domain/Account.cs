@@ -1,6 +1,6 @@
-﻿using CBS.Core.Ledger.Domain.Exceptions;
+﻿using CBS.Core.Accounts.Domain.Exceptions;
 
-namespace CBS.Core.Ledger.Domain;
+namespace CBS.Core.Accounts.Domain;
 
 public enum Currency { Ruble, Dollar, Euro }
 

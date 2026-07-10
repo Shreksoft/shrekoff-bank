@@ -1,17 +1,17 @@
 using CBS.Core.Client.Services;
-using CBS.Core.Ledger.Domain;
-using CBS.Core.Ledger.Services;
+using CBS.Core.Accounts.Domain;
+using CBS.Core.Accounts.Services;
 
 namespace CBS.Core.UseCases;
 
 public class CreateAccountForClientUseCase
 {
-  private readonly ILedger _ledger;
+  private readonly AccountService _accountService;
   private readonly ClientService _clientService;
 
-  internal CreateAccountForClientUseCase(ClientService clientService, ILedger ledger)
+  internal CreateAccountForClientUseCase(ClientService clientService, AccountService accountService)
   {
-    _ledger = ledger;
+    _accountService = accountService;
     _clientService = clientService;
   }
 
@@ -20,7 +20,7 @@ public class CreateAccountForClientUseCase
     if (!_clientService.ClientExists(clientId))
       throw new ArgumentException("client doesn't exist");
 
-    var account = _ledger.CreateAccount(clientId, currency);
+    var account = _accountService.CreateAccount(clientId, currency);
     return account.Id;
   }
 }
