@@ -1,4 +1,4 @@
-using CBS.Core.Client.Services;
+using CBS.Core.Clients.Services;
 using CBS.Core.Accounts.Domain;
 using CBS.Core.Accounts.Services;
 

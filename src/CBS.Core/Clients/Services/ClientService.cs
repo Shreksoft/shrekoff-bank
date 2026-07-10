@@ -1,12 +1,12 @@
-using CBS.Core.Client.Domain;
+using CBS.Core.Clients.Domain;
 
-namespace CBS.Core.Client.Services;
+namespace CBS.Core.Clients.Services;
 
 class ClientService(IClientRepository repository)
 {
   public Guid CreateClient(ClientInfo clientInfo)
   {
-    var client = new Domain.Client(clientInfo);
+    var client = new Client(clientInfo);
     repository.Save(client);
 
     return client.Id;

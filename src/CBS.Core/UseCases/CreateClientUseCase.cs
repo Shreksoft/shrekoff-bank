@@ -1,5 +1,5 @@
-using CBS.Core.Client.Domain;
-using CBS.Core.Client.Services;
+using CBS.Core.Clients.Domain;
+using CBS.Core.Clients.Services;
 
 namespace CBS.Core.UseCases;
 

@@ -1,22 +1,22 @@
-using CBS.Core.Client.Services;
+using CBS.Core.Clients.Services;
 
-namespace CBS.Core.Client.Infrastructure;
+namespace CBS.Core.Clients.Infrastructure;
 
 class InMemoryClientRepository : IClientRepository
 {
-  private readonly Dictionary<Guid, Domain.Client> _clients = [];
+  private readonly Dictionary<Guid, Client> _clients = [];
 
-  public IReadOnlyCollection<Domain.Client> FindByEmail(string email)
+  public IReadOnlyCollection<Client> FindByEmail(string email)
   {
     return _clients.Values.Where(client => client.Info.Email == email).ToArray();
   }
 
-  public Domain.Client? FindById(Guid clientId)
+  public Client? FindById(Guid clientId)
   {
     return _clients.GetValueOrDefault(clientId);
   }
 
-  public IReadOnlyCollection<Domain.Client> FindByPhoneNumber(string phoneNumber)
+  public IReadOnlyCollection<Client> FindByPhoneNumber(string phoneNumber)
   {
     return _clients.Values.Where(client => client.Info.PhoneNumber == phoneNumber).ToArray();
   }
