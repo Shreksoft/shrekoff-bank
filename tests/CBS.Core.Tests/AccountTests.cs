@@ -1,11 +1,12 @@
 ﻿using CBS.Core.Accounts.Domain;
 using CBS.Core.Accounts.Domain.Exceptions;
+using CBS.Core.Accounts.Exceptions;
 
 namespace CBS.Core.Tests;
 
 public class AccountTests
 {
-  private Account CreateAccount() => new(Guid.NewGuid(), Currency.Ruble);
+  private Account CreateAccount(Currency currency = Currency.Ruble) => new(Guid.NewGuid(), currency);
 
   [Fact]
   public void Debit_SufficientBalance_DecreasesBalance()
@@ -20,46 +21,68 @@ public class AccountTests
   }
 
   [Fact]
-  public void Debit_InsufficientBalance_ThrowsError()
+  public void Debit_InsufficientBalance_Throws()
   {
+
     var acc = CreateAccount();
-    var exception = Assert.Throws<InsufficientFundsException>(() => acc.Debit(100));
+
+    Assert.Throws<InsufficientFundsException>(() => acc.Debit(100));
   }
 
   [Fact]
-  public void Debit_AccountBlocked_ThrowsError()
+  public void Debit_AccountBlocked_Throws()
   {
     var acc = CreateAccount();
     acc.Block();
-    var exception = Assert.Throws<AccountBlockedException>(() => acc.Debit(100));
+
+    Assert.Throws<AccountBlockedException>(() => acc.Debit(100));
   }
 
   [Fact]
-  public void Debit_AmountIsNegative_ThrowsError()
+  public void Debit_AmountIsNegative_Throws()
   {
     var acc = CreateAccount();
     var amount = -1;
-    var exception = Assert.Throws<AmountIsNegativeException>(() => acc.Debit(amount));
+
+    Assert.Throws<AmountIsNegativeException>(() => acc.Debit(amount));
 
   }
 
   [Fact]
-  public void Credit_AccountBlocked_ThrowsError()
+  public void Credit_AccountBlocked_Throws()
   {
     var id = Guid.NewGuid();
     var acc = new Account(id, Currency.Ruble);
 
     acc.Block();
 
-    var exception = Assert.Throws<AccountBlockedException>(() => acc.Credit(100));
+    Assert.Throws<AccountBlockedException>(() => acc.Credit(100));
   }
 
   [Fact]
-  public void Credit_AmountIsNegative_ThrowsError()
+  public void Credit_AmountIsNegative_Throws()
   {
     var acc = CreateAccount();
     var amount = -1;
-    var exception = Assert.Throws<AmountIsNegativeException>(() => acc.Credit(amount));
 
+    Assert.Throws<AmountIsNegativeException>(() => acc.Credit(amount));
+  }
+
+  [Fact]
+  public void EnsureSameCurrency_CurrenciesTheSame_Void()
+  {
+    var acc1 = CreateAccount();
+    var acc2 = CreateAccount();
+
+    acc1.EnsureSameCurrency(acc2);
+  }
+
+  [Fact]
+  public void EnsureSameCurrency_CurrenciesTheDiffrent_Throws()
+  {
+    var acc1 = CreateAccount();
+    var acc2 = CreateAccount(Currency.Dollar);
+
+    Assert.Throws<CurrencyMismatchException>(() => acc1.EnsureSameCurrency(acc2));
   }
 }

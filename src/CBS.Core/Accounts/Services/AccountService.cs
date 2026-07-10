@@ -28,9 +28,7 @@ public class AccountService(IAccountRepository repository)
     var from = GetAccountOrThrow(accountFromId);
     var to = GetAccountOrThrow(accountToId);
 
-    if (from.Currency != to.Currency)
-      throw new InvalidOperationException("Accounts doesn't have the same currency");
-
+    from.EnsureSameCurrency(to);
     from.Debit(amount);
     to.Credit(amount);
   }

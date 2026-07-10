@@ -1,4 +1,5 @@
 ﻿using CBS.Core.Accounts.Domain.Exceptions;
+using CBS.Core.Accounts.Exceptions;
 
 namespace CBS.Core.Accounts.Domain;
 
@@ -44,5 +45,11 @@ public class Account(Guid clientId, Currency currency)
   public void Unblock()
   {
     _isBlocked = false;
+  }
+
+  public void EnsureSameCurrency(Account other)
+  {
+    if (Currency != other.Currency)
+      throw new CurrencyMismatchException(Currency, other.Currency);
   }
 }
