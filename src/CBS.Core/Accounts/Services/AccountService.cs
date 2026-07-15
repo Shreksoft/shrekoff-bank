@@ -23,14 +23,17 @@ public class AccountService(IAccountRepository repository)
     account.Block();
   }
 
-  public void Transaction(Guid accountFromId, Guid accountToId, decimal amount)
+  public Guid Transfer(Guid senderAccId, Guid recipientAccId, decimal amount)
   {
-    var from = GetAccountOrThrow(accountFromId);
-    var to = GetAccountOrThrow(accountToId);
+    var transferId = Guid.NewGuid();
+    var sender = GetAccountOrThrow(senderAccId);
+    var recipient = GetAccountOrThrow(recipientAccId);
 
-    from.EnsureSameCurrency(to);
-    from.Debit(amount);
-    to.Credit(amount);
+    sender.EnsureSameCurrency(recipient);
+    sender.Debit(amount);
+    recipient.Credit(amount);
+
+    return transferId;
   }
 
   private Account GetAccountOrThrow(Guid accountId)
