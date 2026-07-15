@@ -85,4 +85,41 @@ public class AccountTests
 
     Assert.Throws<CurrencyMismatchException>(() => acc1.EnsureSameCurrency(acc2));
   }
+
+  [Fact]
+  public async Task Debit_WhenCalledConcurrentlyTotalExceedsBalance_BalanceIsPositive()
+  {
+    var account = CreateAccount();
+    account.Credit(100);
+    var count = 10;
+    var debitAmount = 20;
+    Task[] tasks = new Task[count];
+
+    for (int i = 0; i < count; i++)
+    {
+      tasks[i] = Task.Run(() => account.Debit(debitAmount));
+    }
+
+    await Assert.ThrowsAsync<InsufficientFundsException>(async () => await Task.WhenAll(tasks));
+    Assert.True(account.Balance >= 0);
+  }
+
+  [Fact]
+  public async Task Debit_WhenCalledConcurrentlyTotalNotExceedsBalance_CorrectBalance()
+  {
+    var account = CreateAccount();
+    account.Credit(100);
+    var count = 4;
+    var debitAmount = 20;
+    Task[] tasks = new Task[count];
+
+    for (int i = 0; i < count; i++)
+    {
+      tasks[i] = Task.Run(() => account.Debit(debitAmount));
+    }
+
+    await Task.WhenAll(tasks);
+
+    Assert.Equal(20, account.Balance);
+  }
 }
