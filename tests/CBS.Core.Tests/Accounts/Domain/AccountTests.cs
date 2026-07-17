@@ -1,7 +1,7 @@
 ﻿using CBS.Core.Accounts.Domain;
 using CBS.Core.Accounts.Domain.Exceptions;
 
-namespace CBS.Core.Tests;
+namespace CBS.Core.Tests.Accounts.Domain;
 
 public class AccountTests
 {
