@@ -1,5 +1,4 @@
 ﻿using CBS.Core.Accounts.Domain.Exceptions;
-using CBS.Core.Accounts.Exceptions;
 
 namespace CBS.Core.Accounts.Domain;
 
@@ -11,11 +10,10 @@ public class Account(Guid clientId, Currency currency)
   public Guid ClientId { get; } = clientId;
   public Currency Currency { get; } = currency;
 
-  private decimal _balance;
-  public decimal Balance => _balance;
+  public decimal Balance { get; private set; }
+
   private readonly object _locker = new();
-  private bool _isBlocked;
-  public bool IsBlocked => _isBlocked;
+  public bool IsBlocked { get; private set; }
 
   public void Debit(decimal amount)
   {
@@ -28,11 +26,11 @@ public class Account(Guid clientId, Currency currency)
     Monitor.Enter(_locker);
     try
     {
-      if (_isBlocked) throw new AccountBlockedException(Id);
+      if (IsBlocked) throw new AccountBlockedException(Id);
 
-      if (amount > _balance) throw new InsufficientFundsException(Id, Balance);
+      if (amount > Balance) throw new InsufficientFundsException(Id, Balance);
 
-      _balance -= amount;
+      Balance -= amount;
     }
     finally
     {
@@ -44,19 +42,19 @@ public class Account(Guid clientId, Currency currency)
   {
     if (amount < 0) throw new AmountIsNegativeException(Id, amount);
 
-    if (_isBlocked) throw new AccountBlockedException(Id);
+    if (IsBlocked) throw new AccountBlockedException(Id);
 
-    _balance += amount;
+    Balance += amount;
   }
 
   public void Block()
   {
-    _isBlocked = true;
+    IsBlocked = true;
   }
 
   public void Unblock()
   {
-    _isBlocked = false;
+    IsBlocked = false;
   }
 
   public void EnsureSameCurrency(Account other)

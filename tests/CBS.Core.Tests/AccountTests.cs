@@ -1,6 +1,5 @@
 ﻿using CBS.Core.Accounts.Domain;
 using CBS.Core.Accounts.Domain.Exceptions;
-using CBS.Core.Accounts.Exceptions;
 
 namespace CBS.Core.Tests;
 
