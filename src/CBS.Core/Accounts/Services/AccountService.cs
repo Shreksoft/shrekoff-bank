@@ -1,4 +1,5 @@
 ﻿using CBS.Core.Accounts.Domain;
+using CBS.Core.Accounts.Domain.Exceptions;
 
 namespace CBS.Core.Accounts.Services;
 
@@ -25,15 +26,37 @@ public class AccountService(IAccountRepository repository)
 
   public Guid Transfer(Guid senderAccId, Guid recipientAccId, decimal amount)
   {
-    var transferId = Guid.NewGuid();
     var sender = GetAccountOrThrow(senderAccId);
     var recipient = GetAccountOrThrow(recipientAccId);
 
-    sender.EnsureSameCurrency(recipient);
-    sender.Debit(amount);
-    recipient.Credit(amount);
+    try
+    {
+      sender.EnsureSameCurrency(recipient);
+      sender.Debit(amount);
+      recipient.Credit(amount);
+    }
+    catch (AccountBlockedException ex) when (ex.AccountId == recipient.Id)
+    {
+      Rollback(sender, amount);
+      throw;
+    }
 
+    var transferId = Guid.NewGuid();
     return transferId;
+  }
+
+  private static void Rollback(Account account, decimal amount)
+  {
+    try
+    {
+      account.Credit(amount);
+    }
+    catch (AccountBlockedException)
+    {
+      account.Unblock();
+      account.Credit(amount);
+      account.Block();
+    }
   }
 
   private Account GetAccountOrThrow(Guid accountId)
