@@ -14,5 +14,7 @@ public class CBS
   public CreateAccountForClientUseCase CreateAccountForClientUseCase() => new(_clientService, _accountService);
 
   public CreateClientUseCase CreateClientUseCase() => new(_clientService);
+
+  public TransferUseCase TransferUseCase() => new(_accountService);
 }
 
