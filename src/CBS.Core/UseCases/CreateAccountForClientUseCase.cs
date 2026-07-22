@@ -18,7 +18,7 @@ public class CreateAccountForClientUseCase
   public Guid Execute(Guid clientId, Currency currency)
   {
     if (!_clientService.ClientExists(clientId))
-      throw new ArgumentException("client doesn't exist");
+      throw new ArgumentException("Client doesn't exist", nameof(clientId));
 
     var account = _accountService.CreateAccount(clientId, currency);
     return account.Id;
