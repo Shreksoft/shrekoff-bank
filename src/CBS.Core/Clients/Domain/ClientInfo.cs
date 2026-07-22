@@ -17,10 +17,10 @@ public readonly record struct ClientInfo
     if (string.IsNullOrWhiteSpace(LastName))
       throw new InvalidOperationException("LastName can't be null or white space");
 
-    FirstName = firstName;
-    LastName = lastName;
+    FirstName = firstName.ToLower();
+    LastName = lastName.ToLower();
     BirthDate = birthDate;
-    Email = email;
+    Email = email?.ToLower();
     PhoneNumber = phoneNumber;
   }
 }
