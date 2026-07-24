@@ -16,5 +16,6 @@ public class CBS
   public CreateClientUseCase CreateClientUseCase() => new(_clientService);
 
   public TransferUseCase TransferUseCase() => new(_accountService);
-}
 
+  public GetClientByIdUseCase GetClientUseCase() => new(_clientService);
+}

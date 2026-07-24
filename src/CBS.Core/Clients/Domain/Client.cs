@@ -1,6 +1,6 @@
 namespace CBS.Core.Clients.Domain;
 
-class Client(ClientInfo clientInfo)
+public class Client(ClientInfo clientInfo)
 {
   public ClientInfo Info { get; private set; } = clientInfo;
   public Guid Id { get; } = Guid.NewGuid();

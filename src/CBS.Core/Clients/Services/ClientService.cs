@@ -17,4 +17,9 @@ class ClientService(IClientRepository repository)
     var client = repository.FindById(clientId);
     return client != null;
   }
+
+  public Client? GetClientById(Guid id)
+  {
+    return repository.FindById(id);
+  }
 }
