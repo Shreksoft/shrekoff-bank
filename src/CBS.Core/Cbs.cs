@@ -6,7 +6,7 @@ using CBS.Core.UseCases;
 
 namespace CBS.Core;
 
-public class CBS
+public class Cbs
 {
   private readonly AccountService _accountService = new(new InMemoryAccountRepository());
   private readonly ClientService _clientService = new(new InMemoryClientRepository());
