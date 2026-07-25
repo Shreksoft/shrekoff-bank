@@ -3,11 +3,10 @@ using CBS.Core.Clients.Services;
 
 namespace CBS.Core.UseCases;
 
-public class GetClientByIdUseCase
+public class GetClientByIdUseCase(ClientService clientService)
 {
-  private readonly ClientService _clientService;
-
-  internal GetClientByIdUseCase(ClientService clientService) => _clientService = clientService;
-
-  public Client? Execute(Guid id) => _clientService.GetClientById(id);
+  public Client? Execute(Guid id)
+  {
+    return clientService.GetClientById(id);
+  }
 }

@@ -2,7 +2,7 @@ using CBS.Core.Clients.Domain;
 
 namespace CBS.Core.Clients.Services;
 
-class ClientService(IClientRepository repository)
+public class ClientService(IClientRepository repository)
 {
   public Guid CreateClient(ClientInfo clientInfo)
   {

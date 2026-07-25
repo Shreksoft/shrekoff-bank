@@ -2,11 +2,10 @@
 
 namespace CBS.Core.UseCases;
 
-public class TransferUseCase
+public class TransferUseCase(AccountService accountService)
 {
-  private readonly AccountService _accountService;
-
-  internal TransferUseCase(AccountService accountService) => _accountService = accountService;
-
-  public Guid Execute(Guid senderAccountId, Guid recipientAccountId, decimal amount) => _accountService.Transfer(senderAccountId, recipientAccountId, amount);
+  public Guid Execute(Guid senderAccountId, Guid recipientAccountId, decimal amount)
+  {
+    return accountService.Transfer(senderAccountId, recipientAccountId, amount);
+  }
 }

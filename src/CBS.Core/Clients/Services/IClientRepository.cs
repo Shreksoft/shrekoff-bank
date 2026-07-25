@@ -2,7 +2,7 @@ using CBS.Core.Clients.Domain;
 
 namespace CBS.Core.Clients.Services;
 
-interface IClientRepository
+public interface IClientRepository
 {
   public void Save(Client client);
   public Client? FindById(Guid clientId);

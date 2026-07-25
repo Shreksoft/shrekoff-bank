@@ -3,7 +3,7 @@ using CBS.Core.Clients.Services;
 
 namespace CBS.Core.Clients.Infrastructure;
 
-class InMemoryClientRepository : IClientRepository
+public class InMemoryClientRepository : IClientRepository
 {
   private readonly Dictionary<Guid, Client> _clients = [];
 
