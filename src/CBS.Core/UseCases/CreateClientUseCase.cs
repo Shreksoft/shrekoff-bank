@@ -5,15 +5,14 @@ namespace CBS.Core.UseCases;
 
 public class CreateClientUseCase(ClientService clientService)
 {
-  private const byte AdultAge = 18;
+  private const byte MinAge = 18;
 
   public Guid Execute(ClientInfo clientInfo)
   {
-    if (clientInfo.BirthDate.Age < AdultAge)
-      throw new InvalidOperationException(
-        $"Age({clientInfo.BirthDate.Age}) is small for adult account (adult is {AdultAge})");
+    if (clientInfo.BirthDate.Age < MinAge)
+      throw new ArgumentException(
+        $"Age({clientInfo.BirthDate.Age}) is small for creating account (account is allowed for {MinAge} age)");
 
-    var id = clientService.CreateClient(clientInfo);
-    return id;
+    return clientService.CreateClient(clientInfo);
   }
 }
