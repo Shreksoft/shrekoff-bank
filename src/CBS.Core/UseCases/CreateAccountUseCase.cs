@@ -4,7 +4,7 @@ using CBS.Core.Clients.Services;
 
 namespace CBS.Core.UseCases;
 
-public class CreateAccountForClientUseCase(ClientService clientService, AccountService accountService)
+public class CreateAccountUseCase(ClientService clientService, AccountService accountService)
 {
   public Guid Execute(Guid clientId, Currency currency)
   {
