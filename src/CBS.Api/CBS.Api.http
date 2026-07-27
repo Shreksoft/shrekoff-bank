@@ -1,3 +1,25 @@
 @Api_HostAddress = http://localhost:5294
 
 ###
+# @name CreateClient
+POST {{Api_HostAddress}}/api/clients/create
+Content-Type: application/json
+
+{
+  "firstName": "Иван",
+  "middleName": null,
+  "lastName": "Петров",
+  "birthDate": "1998-07-21",
+  "email": "ivan@example.com",
+  "phoneNumber": "+79991234567"
+}
+
+> {%
+
+    client.global.set("clientId", response.body.id);
+
+%}
+
+###
+GET {{Api_HostAddress}}/api/clients/{{clientId}}
+Content-Type: application/json
