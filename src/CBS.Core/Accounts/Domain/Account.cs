@@ -17,7 +17,7 @@ public class Account(Guid clientId, Currency currency)
 
   public void Debit(decimal amount)
   {
-    if (amount < 0) throw new AmountIsNegativeException(Id, amount);
+    if (amount <= 0) throw new AmountIsNegativeException(Id, amount);
 
     /**
     Monitor - механизм синхронизации доступа при многопотоке, один из потоков, который попадает в этот метод занимает объект _locker это сигнал другим потокам встать в ожидание пока _locker не освободится
@@ -40,7 +40,7 @@ public class Account(Guid clientId, Currency currency)
 
   public void Credit(decimal amount)
   {
-    if (amount < 0) throw new AmountIsNegativeException(Id, amount);
+    if (amount <= 0) throw new AmountIsNegativeException(Id, amount);
 
     if (IsBlocked) throw new AccountBlockedException(Id);
 
