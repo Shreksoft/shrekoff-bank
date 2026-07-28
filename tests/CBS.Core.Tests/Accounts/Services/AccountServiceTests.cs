@@ -41,4 +41,13 @@ public class AccountServiceTests
     Assert.Equal(amount, acc1.Balance);
     Assert.Equal(0, acc2.Balance);
   }
+
+  [Fact]
+  public void Transfer_RecipientAndSenderTheSame_Throws()
+  {
+    var accountService = new AccountService(new InMemoryAccountRepository());
+    var (sender, _) = CreateAccountPair(accountService);
+
+    Assert.Throws<InvalidOperationException>(() => accountService.Transfer(sender.Id, sender.Id, 100));
+  }
 }

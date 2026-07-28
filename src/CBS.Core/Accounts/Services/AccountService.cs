@@ -26,6 +26,9 @@ public class AccountService(IAccountRepository repository)
 
   public Guid Transfer(Guid senderAccId, Guid recipientAccId, decimal amount)
   {
+    if (senderAccId == recipientAccId)
+      throw new InvalidOperationException("Transfers between the same account are prohibited");
+
     var sender = GetAccountOrThrow(senderAccId);
     var recipient = GetAccountOrThrow(recipientAccId);
 
@@ -59,9 +62,9 @@ public class AccountService(IAccountRepository repository)
     }
   }
 
-  private Account GetAccountOrThrow(Guid accountId)
+  public Account GetAccountOrThrow(Guid accountId)
   {
     return repository.FindById(accountId)
-                  ?? throw new InvalidOperationException($"Account {accountId} not found");
+           ?? throw new InvalidOperationException($"Account {accountId} not found");
   }
 }
