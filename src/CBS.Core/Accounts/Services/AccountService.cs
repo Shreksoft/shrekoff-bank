@@ -67,4 +67,11 @@ public class AccountService(IAccountRepository repository)
     return repository.FindById(accountId)
            ?? throw new InvalidOperationException($"Account {accountId} not found");
   }
+
+  public decimal Deposit(Guid accountId, decimal amount)
+  {
+    var account = GetAccountOrThrow(accountId);
+    account.Credit(amount);
+    return account.Balance;
+  }
 }
