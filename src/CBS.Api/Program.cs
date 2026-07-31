@@ -19,6 +19,8 @@ builder.Services.AddSingleton<AccountService>();
 builder.Services.AddSingleton<ClientService>();
 builder.Services.AddSingleton<CreateClientUseCase>();
 builder.Services.AddSingleton<GetClientByIdUseCase>();
+builder.Services.AddSingleton<CreateAccountUseCase>();
+builder.Services.AddSingleton<TransferUseCase>();
 
 // Create and run app
 var app = builder.Build();
