@@ -1,21 +1,22 @@
-﻿using CBS.Core.Clients.Domain;
+﻿using CBS.Api.Controllers.Clients.Dto;
+using CBS.Core.Clients.Domain;
 using CBS.Core.UseCases;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CBS.Api.Controllers;
+namespace CBS.Api.Controllers.Clients;
 
 public class ClientsController : BaseApiController
 {
   [HttpPost("[action]")]
-  public IActionResult Create(CreateClientRequest request, [FromServices] CreateClientUseCase useCase)
+  public IActionResult Create(ClientDto dto, [FromServices] CreateClientUseCase useCase)
   {
     try
     {
       var ci = new ClientInfo(
-        new FullName(request.FirstName, request.MiddleName, request.LastName),
-        new BirthDate(request.BirthDate),
-        request.Email,
-        request.PhoneNumber
+        new FullName(dto.FirstName, dto.MiddleName, dto.LastName),
+        new BirthDate(dto.BirthDate),
+        dto.Email,
+        dto.PhoneNumber
       );
 
       var clientId = useCase.Execute(ci);
@@ -43,12 +44,3 @@ public class ClientsController : BaseApiController
     }
   }
 }
-
-public record CreateClientRequest(
-  string FirstName,
-  string? MiddleName,
-  string LastName,
-  DateOnly BirthDate,
-  string? Email,
-  string? PhoneNumber
-);

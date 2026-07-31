@@ -1,9 +1,9 @@
-﻿using CBS.Core.Accounts.Domain;
+﻿using CBS.Api.Controllers.Accounts.Dto;
 using CBS.Core.Accounts.Services;
 using CBS.Core.UseCases;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CBS.Api.Controllers;
+namespace CBS.Api.Controllers.Accounts;
 
 public class AccountController : BaseApiController
 {
@@ -66,12 +66,3 @@ public class AccountController : BaseApiController
     }
   }
 }
-
-public record CreateAccountDto(
-  Guid ClientId,
-  Currency Currency
-);
-
-public record TransferDto(Guid SenderAccId, Guid RecipientAccId, decimal Amount);
-
-public record DepositDto(Guid AccountId, decimal Amount);
