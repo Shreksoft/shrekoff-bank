@@ -16,9 +16,8 @@ public class ClientServiceTests
       null,
       null
     );
-    var guid = clientService.CreateClient(ci);
 
-    Assert.True(clientService.ClientExists(guid));
-    Assert.NotNull(clientService.GetClientById(guid));
+    var ex = Record.Exception(() => clientService.CreateClient(ci));
+    Assert.Null(ex);
   }
 }

@@ -5,8 +5,8 @@ namespace CBS.Core.UseCases;
 
 public class GetClientByIdUseCase(ClientService clientService)
 {
-  public Client? Execute(Guid id)
+  public Client Execute(Guid id)
   {
-    return clientService.GetClientById(id);
+    return clientService.GetById(id);
   }
 }

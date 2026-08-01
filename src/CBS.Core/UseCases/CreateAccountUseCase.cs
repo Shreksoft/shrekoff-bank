@@ -8,8 +8,8 @@ public class CreateAccountUseCase(ClientService clientService, AccountService ac
 {
   public Guid Execute(Guid clientId, Currency currency)
   {
-    if (!clientService.ClientExists(clientId))
-      throw new ArgumentException("Client doesn't exist", nameof(clientId));
+    //ensure that client exists
+    clientService.GetById(clientId);
 
     var account = accountService.CreateAccount(clientId, currency);
     return account.Id;

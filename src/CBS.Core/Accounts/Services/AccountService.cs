@@ -1,5 +1,6 @@
 ﻿using CBS.Core.Accounts.Domain;
 using CBS.Core.Accounts.Domain.Exceptions;
+using CBS.Core.Exceptions;
 
 namespace CBS.Core.Accounts.Services;
 
@@ -14,13 +15,13 @@ public class AccountService(IAccountRepository repository)
 
   public void OpenAccount(Guid accountId)
   {
-    var account = GetAccountOrThrow(accountId);
+    var account = GetById(accountId);
     account.Unblock();
   }
 
   public void CloseAccount(Guid accountId)
   {
-    var account = GetAccountOrThrow(accountId);
+    var account = GetById(accountId);
     account.Block();
   }
 
@@ -29,8 +30,8 @@ public class AccountService(IAccountRepository repository)
     if (senderAccId == recipientAccId)
       throw new InvalidOperationException("Transfers between the same account are prohibited");
 
-    var sender = GetAccountOrThrow(senderAccId);
-    var recipient = GetAccountOrThrow(recipientAccId);
+    var sender = GetById(senderAccId);
+    var recipient = GetById(recipientAccId);
 
     try
     {
@@ -62,15 +63,15 @@ public class AccountService(IAccountRepository repository)
     }
   }
 
-  public Account GetAccountOrThrow(Guid accountId)
+  public Account GetById(Guid accountId)
   {
     return repository.FindById(accountId)
-           ?? throw new InvalidOperationException($"Account {accountId} not found");
+           ?? throw new ObjectNotFoundException(accountId);
   }
 
   public decimal Deposit(Guid accountId, decimal amount)
   {
-    var account = GetAccountOrThrow(accountId);
+    var account = GetById(accountId);
     account.Credit(amount);
     return account.Balance;
   }

@@ -1,4 +1,5 @@
 using CBS.Core.Clients.Domain;
+using CBS.Core.Exceptions;
 
 namespace CBS.Core.Clients.Services;
 
@@ -12,14 +13,8 @@ public class ClientService(IClientRepository repository)
     return client.Id;
   }
 
-  public bool ClientExists(Guid clientId)
+  public Client GetById(Guid id)
   {
-    var client = repository.FindById(clientId);
-    return client != null;
-  }
-
-  public Client? GetClientById(Guid id)
-  {
-    return repository.FindById(id);
+    return repository.FindById(id) ?? throw new ObjectNotFoundException(id);
   }
 }
