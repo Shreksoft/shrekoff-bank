@@ -10,59 +10,31 @@ public class AccountController : BaseApiController
   [HttpPost("[action]")]
   public IActionResult Create(CreateAccountDto dto, [FromServices] CreateAccountUseCase useCase)
   {
-    try
-    {
-      var (clientId, currency) = dto;
-      var accountId = useCase.Execute(clientId, currency);
-      return CreatedAtAction(nameof(GetAccountById), new { accountId }, new { id = accountId });
-    }
-    catch (Exception e)
-    {
-      return BadRequest(new ProblemDetails { Title = "Invalid input", Detail = e.Message });
-    }
+    var (clientId, currency) = dto;
+    var accountId = useCase.Execute(clientId, currency);
+    return CreatedAtAction(nameof(GetAccountById), new { accountId }, new { id = accountId });
   }
 
   [HttpGet("{accountId:guid}")]
   public IActionResult GetAccountById(Guid accountId, [FromServices] AccountService accountService)
   {
-    try
-    {
-      var account = accountService.GetAccountOrThrow(accountId);
-      return Ok(new { account });
-    }
-    catch (InvalidOperationException)
-    {
-      return NotFound();
-    }
+    var account = accountService.GetById(accountId);
+    return Ok(new { account });
   }
 
   [HttpPost("[action]")]
   public IActionResult Transfer(TransferDto dto, [FromServices] TransferUseCase useCase)
   {
-    try
-    {
-      var (senderAccountId, recipientAccountId, amount) = dto;
-      var guid = useCase.Execute(senderAccountId, recipientAccountId, amount);
-      return Ok(new { guid });
-    }
-    catch (Exception e)
-    {
-      return BadRequest(new ProblemDetails { Detail = e.Message });
-    }
+    var (senderAccountId, recipientAccountId, amount) = dto;
+    var guid = useCase.Execute(senderAccountId, recipientAccountId, amount);
+    return Ok(new { guid });
   }
 
   [HttpPut("[action]")]
   public IActionResult Deposit(DepositDto dto, [FromServices] AccountService accountService)
   {
-    try
-    {
-      var (accountId, amount) = dto;
-      var balance = accountService.Deposit(accountId, amount);
-      return Ok(new { balance });
-    }
-    catch (Exception e)
-    {
-      return BadRequest(new ProblemDetails { Detail = e.Message });
-    }
+    var (accountId, amount) = dto;
+    var balance = accountService.Deposit(accountId, amount);
+    return Ok(new { balance });
   }
 }

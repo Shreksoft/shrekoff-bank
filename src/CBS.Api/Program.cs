@@ -1,3 +1,4 @@
+using CBS.Api.Middlewares;
 using CBS.Core.Accounts.Infrastructure;
 using CBS.Core.Accounts.Services;
 using CBS.Core.Clients.Infrastructure;
@@ -31,6 +32,8 @@ if (app.Environment.IsDevelopment()) app.MapOpenApi();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
 
