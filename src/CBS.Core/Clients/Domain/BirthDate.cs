@@ -2,7 +2,7 @@ namespace CBS.Core.Clients.Domain;
 
 public readonly struct BirthDate
 {
-  public DateOnly Date { get; init; }
+  public DateOnly Date { get; }
   public int Age => CalcAge(Date, DateOnly.FromDateTime(DateTime.Now));
 
   public BirthDate(DateOnly date)
