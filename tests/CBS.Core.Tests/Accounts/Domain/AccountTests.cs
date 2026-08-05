@@ -77,7 +77,7 @@ public class AccountTests
   }
 
   [Fact]
-  public void EnsureSameCurrency_CurrenciesTheDiffrent_Throws()
+  public void EnsureSameCurrency_CurrenciesTheDifferent_Throws()
   {
     var acc1 = CreateAccount();
     var acc2 = CreateAccount(Currency.Dollar);
