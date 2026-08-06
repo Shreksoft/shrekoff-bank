@@ -5,7 +5,7 @@ namespace CBS.Core.Tests.Accounts.Domain;
 
 public class AccountTests
 {
-  private Account CreateAccount(Currency currency = Currency.Ruble) => new(Guid.NewGuid(), currency);
+  private Account CreateAccount(Currency currency = Currency.SLP) => new(Guid.NewGuid(), currency);
 
   [Fact]
   public void Debit_SufficientBalance_DecreasesBalance()
@@ -51,7 +51,7 @@ public class AccountTests
   public void Credit_AccountBlocked_Throws()
   {
     var id = Guid.NewGuid();
-    var acc = new Account(id, Currency.Ruble);
+    var acc = new Account(id, Currency.SLP);
 
     acc.Block();
 
@@ -80,7 +80,7 @@ public class AccountTests
   public void EnsureSameCurrency_CurrenciesTheDifferent_Throws()
   {
     var acc1 = CreateAccount();
-    var acc2 = CreateAccount(Currency.Dollar);
+    var acc2 = CreateAccount(Currency.PIZ);
 
     Assert.Throws<CurrencyMismatchException>(() => acc1.EnsureSameCurrency(acc2));
   }

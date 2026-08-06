@@ -2,7 +2,7 @@
 
 namespace CBS.Core.Accounts.Domain;
 
-public enum Currency { Ruble, Dollar, Euro }
+public enum Currency { SLP, PIZ }
 
 public class Account(Guid clientId, Currency currency)
 {

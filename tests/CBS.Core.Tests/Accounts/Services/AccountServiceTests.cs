@@ -9,7 +9,7 @@ public class AccountServiceTests
 {
   private static (Account, Account) CreateAccountPair(AccountService accountService)
   {
-    const Currency currency = Currency.Ruble;
+    const Currency currency = Currency.SLP;
     var acc1 = accountService.CreateAccount(Guid.NewGuid(), currency);
     var acc2 = accountService.CreateAccount(Guid.NewGuid(), currency);
     return (acc1, acc2);
