@@ -1,4 +1,4 @@
-﻿using CBS.Core.Accounts.Domain;
+using CBS.Core.Accounts.Domain;
 using CBS.Core.Accounts.Domain.Exceptions;
 using CBS.Core.Exceptions;
 
@@ -6,9 +6,9 @@ namespace CBS.Core.Accounts.Services;
 
 public class AccountService(IAccountRepository repository)
 {
-  public Account CreateAccount(Guid clientId, Currency currency)
+  public Account CreateAccount(Guid clientId, Money money)
   {
-    var account = new Account(clientId, currency);
+    var account = new Account(clientId, money);
     repository.Save(account);
     return account;
   }
@@ -73,6 +73,6 @@ public class AccountService(IAccountRepository repository)
   {
     var account = GetById(accountId);
     account.Credit(amount);
-    return account.Balance;
+    return account.Money.Amount;
   }
 }

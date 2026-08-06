@@ -11,7 +11,8 @@ public class CreateAccountUseCase(ClientService clientService, AccountService ac
     //ensure that client exists
     clientService.GetById(clientId);
 
-    var account = accountService.CreateAccount(clientId, currency);
+    var money = new Money(currency, 0);
+    var account = accountService.CreateAccount(clientId, money);
     return account.Id;
   }
 }

@@ -1,17 +1,12 @@
-﻿using CBS.Core.Accounts.Domain.Exceptions;
+using CBS.Core.Accounts.Domain.Exceptions;
 
 namespace CBS.Core.Accounts.Domain;
 
-public enum Currency { SLP, PIZ }
-
-public class Account(Guid clientId, Currency currency)
+public class Account(Guid clientId, Money money)
 {
   public Guid Id { get; } = Guid.NewGuid();
   public Guid ClientId { get; } = clientId;
-  public Currency Currency { get; } = currency;
-
-  public decimal Balance { get; private set; }
-
+  public Money Money { get; private set; } = money;
   private readonly object _locker = new();
   public bool IsBlocked { get; private set; }
 
@@ -28,9 +23,10 @@ public class Account(Guid clientId, Currency currency)
     {
       if (IsBlocked) throw new AccountBlockedException(Id);
 
-      if (amount > Balance) throw new InsufficientFundsException(Id, Balance);
+      var balance = Money.Amount;
+      if (amount > balance) throw new InsufficientFundsException(Id, balance);
 
-      Balance -= amount;
+      Money = Money with { Amount = balance - amount };
     }
     finally
     {
@@ -41,10 +37,9 @@ public class Account(Guid clientId, Currency currency)
   public void Credit(decimal amount)
   {
     if (amount <= 0) throw new AmountIsNegativeException(Id, amount);
-
     if (IsBlocked) throw new AccountBlockedException(Id);
 
-    Balance += amount;
+    Money = Money with { Amount = Money.Amount + amount };
   }
 
   public void Block()
@@ -59,7 +54,7 @@ public class Account(Guid clientId, Currency currency)
 
   public void EnsureSameCurrency(Account other)
   {
-    if (Currency != other.Currency)
-      throw new CurrencyMismatchException(Currency, other.Currency);
+    if (Money.Currency != other.Money.Currency)
+      throw new CurrencyMismatchException(Money.Currency, other.Money.Currency);
   }
 }

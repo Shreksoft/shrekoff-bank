@@ -5,7 +5,7 @@ namespace CBS.Core.Tests.Accounts.Domain;
 
 public class AccountTests
 {
-  private Account CreateAccount(Currency currency = Currency.SLP) => new(Guid.NewGuid(), currency);
+  private Account CreateAccount(Currency currency = Currency.SLP) => new(Guid.NewGuid(), new Money(currency, 0));
 
   [Fact]
   public void Debit_SufficientBalance_DecreasesBalance()
@@ -16,7 +16,7 @@ public class AccountTests
     acc.Credit(amount);
     acc.Debit(amount);
 
-    Assert.Equal(0, acc.Balance);
+    Assert.Equal(0, acc.Money.Amount);
   }
 
   [Fact]
@@ -51,7 +51,7 @@ public class AccountTests
   public void Credit_AccountBlocked_Throws()
   {
     var id = Guid.NewGuid();
-    var acc = new Account(id, Currency.SLP);
+    var acc = new Account(id, new Money(Currency.SLP, 0));
 
     acc.Block();
 
@@ -100,7 +100,7 @@ public class AccountTests
     }
 
     await Assert.ThrowsAsync<InsufficientFundsException>(async () => await Task.WhenAll(tasks));
-    Assert.True(account.Balance >= 0);
+    Assert.True(account.Money.Amount >= 0);
   }
 
   [Fact]
@@ -119,6 +119,6 @@ public class AccountTests
 
     await Task.WhenAll(tasks);
 
-    Assert.Equal(20, account.Balance);
+    Assert.Equal(20, account.Money.Amount);
   }
 }

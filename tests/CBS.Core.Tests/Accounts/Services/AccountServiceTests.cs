@@ -10,8 +10,9 @@ public class AccountServiceTests
   private static (Account, Account) CreateAccountPair(AccountService accountService)
   {
     const Currency currency = Currency.SLP;
-    var acc1 = accountService.CreateAccount(Guid.NewGuid(), currency);
-    var acc2 = accountService.CreateAccount(Guid.NewGuid(), currency);
+    var money = new Money(currency, 0);
+    var acc1 = accountService.CreateAccount(Guid.NewGuid(), money);
+    var acc2 = accountService.CreateAccount(Guid.NewGuid(), money);
     return (acc1, acc2);
   }
 
@@ -24,8 +25,8 @@ public class AccountServiceTests
     acc1.Credit(amount);
 
     accountService.Transfer(acc1.Id, acc2.Id, amount);
-    Assert.Equal(0, acc1.Balance);
-    Assert.Equal(amount, acc2.Balance);
+    Assert.Equal(0, acc1.Money.Amount);
+    Assert.Equal(amount, acc2.Money.Amount);
   }
 
   [Fact]
@@ -38,8 +39,8 @@ public class AccountServiceTests
     acc2.Block();
 
     Assert.Throws<AccountBlockedException>(() => accountService.Transfer(acc1.Id, acc2.Id, amount));
-    Assert.Equal(amount, acc1.Balance);
-    Assert.Equal(0, acc2.Balance);
+    Assert.Equal(amount, acc1.Money.Amount);
+    Assert.Equal(0, acc2.Money.Amount);
   }
 
   [Fact]
