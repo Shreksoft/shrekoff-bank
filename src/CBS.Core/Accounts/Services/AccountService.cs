@@ -4,7 +4,7 @@ using CBS.Core.Exceptions;
 
 namespace CBS.Core.Accounts.Services;
 
-public class AccountService(IAccountRepository repository)
+public class AccountService(IAccountRepository repository, IConvertRateProvider convertRateProvider)
 {
   public Account CreateAccount(Guid clientId, Money money)
   {
@@ -32,12 +32,16 @@ public class AccountService(IAccountRepository repository)
 
     var sender = GetById(senderAccId);
     var recipient = GetById(recipientAccId);
+    var senderCurr = sender.Money.Currency;
+    var recipientCurr = recipient.Money.Currency;
 
     try
     {
-      sender.EnsureSameCurrency(recipient);
+      var rate = convertRateProvider.GetRate(senderCurr, recipientCurr);
+      var convertedAmount = (decimal)rate * amount;
+
       sender.Debit(amount);
-      recipient.Credit(amount);
+      recipient.Credit(convertedAmount);
     }
     catch (AccountBlockedException ex) when (ex.AccountId == recipient.Id)
     {
