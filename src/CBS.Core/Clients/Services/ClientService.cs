@@ -3,12 +3,13 @@ using CBS.Core.Exceptions;
 
 namespace CBS.Core.Clients.Services;
 
-public class ClientService(IClientRepository repository)
+public class ClientService(IUnitOfWork unitOfWork, IClientRepository repository)
 {
   public Guid CreateClient(ClientInfo clientInfo)
   {
     var client = new Client(clientInfo);
-    repository.Save(client);
+    repository.Add(client);
+    unitOfWork.SaveChanges();
 
     return client.Id;
   }

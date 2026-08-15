@@ -4,8 +4,6 @@ namespace CBS.Core.Clients.Services;
 
 public interface IClientRepository
 {
-  public void Save(Client client);
+  public void Add(Client client);
   public Client? FindById(Guid clientId);
-  public IReadOnlyCollection<Client> FindByPhoneNumber(string phoneNumber);
-  public IReadOnlyCollection<Client> FindByEmail(string email);
 }

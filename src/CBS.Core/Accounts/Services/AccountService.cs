@@ -1,15 +1,15 @@
 using CBS.Core.Accounts.Domain;
-using CBS.Core.Accounts.Domain.Exceptions;
 using CBS.Core.Exceptions;
 
 namespace CBS.Core.Accounts.Services;
 
-public class AccountService(IAccountRepository repository, IConvertRateProvider convertRateProvider)
+public class AccountService(IUnitOfWork unitOfWork, IAccountRepository repository, IConvertRateProvider convertRateProvider)
 {
   public Account CreateAccount(Guid clientId, Money money)
   {
     var account = new Account(clientId, money);
-    repository.Save(account);
+    repository.Add(account);
+    unitOfWork.SaveChanges();
     return account;
   }
 
@@ -17,12 +17,16 @@ public class AccountService(IAccountRepository repository, IConvertRateProvider 
   {
     var account = GetById(accountId);
     account.Unblock();
+    repository.Update(account);
+    unitOfWork.SaveChanges();
   }
 
-  public void CloseAccount(Guid accountId)
+  public void BlockAccount(Guid accountId)
   {
     var account = GetById(accountId);
     account.Block();
+    repository.Update(account);
+    unitOfWork.SaveChanges();
   }
 
   public Guid Transfer(Guid senderAccId, Guid recipientAccId, decimal amount)
@@ -35,36 +39,17 @@ public class AccountService(IAccountRepository repository, IConvertRateProvider 
     var senderCurr = sender.Money.Currency;
     var recipientCurr = recipient.Money.Currency;
 
-    try
-    {
-      var rate = convertRateProvider.GetRate(senderCurr, recipientCurr);
-      var convertedAmount = (decimal)rate * amount;
+    var rate = convertRateProvider.GetRate(senderCurr, recipientCurr);
+    var convertedAmount = (decimal)rate * amount;
 
-      sender.Debit(amount);
-      recipient.Credit(convertedAmount);
-    }
-    catch (AccountBlockedException ex) when (ex.AccountId == recipient.Id)
-    {
-      Rollback(sender, amount);
-      throw;
-    }
+    sender.Debit(amount);
+    repository.Update(sender);
+    recipient.Credit(convertedAmount);
+    repository.Update(recipient);
+    unitOfWork.SaveChanges();
 
     var transferId = Guid.NewGuid();
     return transferId;
-  }
-
-  private static void Rollback(Account account, decimal amount)
-  {
-    try
-    {
-      account.Credit(amount);
-    }
-    catch (AccountBlockedException)
-    {
-      account.Unblock();
-      account.Credit(amount);
-      account.Block();
-    }
   }
 
   public Account GetById(Guid accountId)
@@ -77,6 +62,8 @@ public class AccountService(IAccountRepository repository, IConvertRateProvider 
   {
     var account = GetById(accountId);
     account.Credit(amount);
+    repository.Update(account);
+    unitOfWork.SaveChanges();
     return account.Money.Amount;
   }
 }
