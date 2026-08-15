@@ -1,4 +1,4 @@
-﻿using CBS.Core.Clients.Domain;
+using CBS.Core.Clients.Domain;
 using CBS.Core.Clients.Services;
 using CBS.Core.Infrastructure.Data;
 using CBS.Core.Infrastructure.Data.Clients;
@@ -8,7 +8,7 @@ namespace CBS.Core.Tests.Clients.Services;
 public class ClientServiceTests
 {
   [Fact]
-  public void CreateClient_CorrectClientData_ClientExistsInBase()
+  public void CreateClient_CorrectClientData_ClientAddedInBase()
   {
     var table = new Table<Client>();
     var unitOfWork = new UnitOfWork();
@@ -21,7 +21,10 @@ public class ClientServiceTests
       null
     );
 
-    var ex = Record.Exception(() => clientService.CreateClient(ci));
-    Assert.Null(ex);
+    var id = clientService.CreateClient(ci);
+    var client = clientService.GetById(id);
+
+    Assert.Equal(id, client.Id);
+    Assert.Equal(ci, client.Info);
   }
 }
