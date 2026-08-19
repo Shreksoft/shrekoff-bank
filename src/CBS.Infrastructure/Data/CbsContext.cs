@@ -50,7 +50,7 @@ public class CbsContext(DbContextOptions<CbsContext> options) : DbContext(option
   }
 }
 
-// this class created only for EF works (migration etc. without EFCore package in another csproj)
+// this class created only for EF works (migration etc. without EFCore.Design package in another csproj)
 public class CbsContextFactory : IDesignTimeDbContextFactory<CbsContext>
 {
   public CbsContext CreateDbContext(string[] args)
