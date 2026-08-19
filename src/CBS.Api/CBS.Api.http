@@ -1,0 +1,65 @@
+@Api_HostAddress = http://localhost:5294
+
+###
+# @name CreateClient
+POST {{Api_HostAddress}}/api/clients/create
+Content-Type: application/json
+
+{
+  "firstName": "Иван",
+  "middleName": null,
+  "lastName": "Петров",
+  "birthDate": "1998-07-21",
+  "email": "ivan@example.com",
+  "phoneNumber": "+79991234567"
+}
+
+> {%
+
+ client.global.set("clientId", response.body.id);
+
+%}
+
+###
+GET {{Api_HostAddress}}/api/clients/{{clientId}}
+Content-Type: application/json
+
+
+###
+POST {{Api_HostAddress}}/api/Account/create
+Content-Type: application/json
+
+{
+  "clientId": "{{clientId}}",
+  "currency": 1
+}
+
+> {%
+
+ client.global.set("accountId", response.body.id);
+
+%}
+
+###
+GET {{Api_HostAddress}}/api/Account/{{accountId}}
+Content-Type: application/json
+
+###
+POST {{Api_HostAddress}}/api/Account/Transfer
+Content-Type: application/json
+
+{
+  "senderAccId": "85ccd9e4-0adb-4dcb-b94c-4f1787d1fc8f",
+  "recipientAccId": "335a4177-4bf2-46fa-9fdc-9ba50170f865",
+  "amount": 90
+}
+
+
+###
+PUT {{Api_HostAddress}}/api/Account/Deposit
+Content-Type: application/json
+
+{
+  "accountId": "85ccd9e4-0adb-4dcb-b94c-4f1787d1fc8f",
+  "amount": 100
+}

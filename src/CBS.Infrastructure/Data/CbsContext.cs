@@ -1,0 +1,64 @@
+using CBS.Core.Accounts.Domain;
+using CBS.Core.Clients.Domain;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Options;
+
+namespace CBS.Infrastructure.Data;
+
+public class CbsContext(DbContextOptions<CbsContext> options) : DbContext(options)
+{
+  public DbSet<Account> Accounts { get; set; }
+  public DbSet<Client> Clients { get; set; }
+
+  // hand mapping for EF. Because EF can't map complex values like Money model etc.
+  protected override void OnModelCreating(ModelBuilder modelBuilder)
+  {
+    // help EF to understand how to decompose complex types in fields
+    modelBuilder.Entity<Account>(account =>
+    {
+      account.HasKey(a => a.Id);
+      account.ComplexProperty(a => a.Money, money =>
+      {
+        money.Property(m => m.Amount);
+        money.Property(m => m.Currency).HasConversion<string>();
+      });
+    });
+
+    modelBuilder.Entity<Client>(client =>
+    {
+      client.HasKey(c => c.Id);
+      client.ComplexProperty(c => c.Info, info =>
+      {
+        info.Property(i => i.Email);
+        info.Property(i => i.PhoneNumber);
+        info.ComplexProperty(i => i.BirthDate, birthDate =>
+        {
+          birthDate.Property(d => d.Date);
+          birthDate.Ignore(d => d.Age);
+        });
+        info.ComplexProperty(i => i.FullName, fullName =>
+        {
+          fullName.Property(n => n.FirstName);
+          fullName.Property(n => n.LastName);
+          fullName.Property(n => n.MiddleName);
+        });
+      });
+    });
+
+    base.OnModelCreating(modelBuilder);
+  }
+}
+
+// this class created only for EF works (migration etc. without EFCore package in another csproj)
+public class CbsContextFactory : IDesignTimeDbContextFactory<CbsContext>
+{
+  public CbsContext CreateDbContext(string[] args)
+  {
+    var options = new DbContextOptionsBuilder<CbsContext>()
+      .UseSqlite("Data Source=fake.bd")
+      .Options;
+
+    return new CbsContext(options);
+  }
+}
