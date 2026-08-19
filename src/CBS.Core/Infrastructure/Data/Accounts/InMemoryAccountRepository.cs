@@ -8,9 +8,7 @@ public class InMemoryAccountRepository(ITable<Account> table, IChangeTracker cha
   public Account? FindById(Guid accountId)
   {
     var account = table.GetStorage().GetValueOrDefault(accountId);
-    if (account == null) return null;
-
-    return Clone(account);
+    return account == null ? null : Clone(account);
   }
 
   public void Add(Account account)
@@ -23,7 +21,7 @@ public class InMemoryAccountRepository(ITable<Account> table, IChangeTracker cha
     changeTracker.AddChange(() => table.Update(account.Id, Clone(account)));
   }
 
-  public static Account Clone(Account account)
+  private static Account Clone(Account account)
   {
     var clone = new Account(account.Id, account.ClientId, account.Money, account.IsBlocked);
     return clone;

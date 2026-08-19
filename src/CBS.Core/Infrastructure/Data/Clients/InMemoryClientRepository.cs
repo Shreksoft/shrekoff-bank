@@ -13,9 +13,7 @@ public class InMemoryClientRepository(ITable<Client> table, IChangeTracker chang
   public Client? FindById(Guid clientId)
   {
     var client = table.GetStorage().GetValueOrDefault(clientId);
-    if (client == null) return null;
-
-    return Clone(client);
+    return client == null ? null : Clone(client);
   }
 
   private static Client Clone(Client client)
