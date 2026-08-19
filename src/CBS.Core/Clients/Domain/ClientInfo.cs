@@ -3,10 +3,10 @@ namespace CBS.Core.Clients.Domain;
 // record под копотом перегружает Equals, GetHashCode, ToString и операторы == != + деконструкция
 public readonly record struct ClientInfo
 {
-  public FullName FullName { get; }
-  public BirthDate BirthDate { get; }
+  public FullName FullName { get; init; }
+  public BirthDate BirthDate { get; init; }
   public string? Email { get; init; }
-  public string? PhoneNumber { get; }
+  public string? PhoneNumber { get; init; }
 
   public ClientInfo(FullName fullName, BirthDate birthDate, string? email, string? phoneNumber)
   {
@@ -15,4 +15,7 @@ public readonly record struct ClientInfo
     Email = email?.ToLower();
     PhoneNumber = phoneNumber;
   }
+
+  // for EFCore
+  public ClientInfo() : this(default, default, null, null) { }
 }

@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10"/>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CBS.Core\CBS.Core.csproj"/>
+    <ProjectReference Include="..\CBS.Core\CBS.Core.csproj" />
+    <ProjectReference Include="..\CBS.Infrastructure\Data\CBS.Infrastructure.Data.csproj" />
   </ItemGroup>
 
 </Project>

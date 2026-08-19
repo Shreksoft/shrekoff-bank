@@ -11,6 +11,9 @@ public class Account(Guid id, Guid clientId, Money money, bool isBlocked)
 
   public Account(Guid clientId, Money money) : this(Guid.NewGuid(), clientId, money, false) { }
 
+  // for EFCore ()
+  private Account() : this(Guid.Empty, Guid.Empty, default, false) { }
+
   public void Debit(decimal amount)
   {
     if (amount <= 0) throw new AmountIsNegativeException(Id, amount);
