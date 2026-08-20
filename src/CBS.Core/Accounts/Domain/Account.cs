@@ -4,8 +4,8 @@ namespace CBS.Core.Accounts.Domain;
 
 public class Account(Guid id, Guid clientId, Money money, bool isBlocked)
 {
-  public Guid Id { get; } = id;
-  public Guid ClientId { get; } = clientId;
+  public Guid Id { get; private set; } = id;
+  public Guid ClientId { get; private set; } = clientId;
   public Money Money { get; private set; } = money;
   public bool IsBlocked { get; private set; } = isBlocked;
 

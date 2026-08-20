@@ -9,11 +9,6 @@ public class Client(Guid id, ClientInfo clientInfo, DateTime createdDate)
   private Client() : this(Guid.Empty, default, default) { }
 
   public ClientInfo Info { get; private set; } = clientInfo;
-  public Guid Id { get; } = id;
-  public DateTime CreatedDate { get; } = createdDate;
-
-  public void ChangeEmail(string newEmail)
-  {
-    Info = Info with { Email = newEmail };
-  }
+  public Guid Id { get; private set; } = id;
+  public DateTime CreatedDate { get; private set; } = createdDate;
 }

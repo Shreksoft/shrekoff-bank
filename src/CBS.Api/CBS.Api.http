@@ -60,6 +60,6 @@ PUT {{Api_HostAddress}}/api/Account/Deposit
 Content-Type: application/json
 
 {
-  "accountId": "85ccd9e4-0adb-4dcb-b94c-4f1787d1fc8f",
+  "accountId": "{{accountId}}",
   "amount": 100
 }

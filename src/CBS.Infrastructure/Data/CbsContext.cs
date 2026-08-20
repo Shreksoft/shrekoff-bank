@@ -17,7 +17,10 @@ public class CbsContext(DbContextOptions<CbsContext> options) : DbContext(option
     // help EF to understand how to decompose complex types in fields
     modelBuilder.Entity<Account>(account =>
     {
-      account.HasKey(a => a.Id);
+      account.HasOne<Client>()
+        .WithMany()
+        .HasForeignKey(a => a.ClientId)
+        .OnDelete(DeleteBehavior.Restrict);
       account.ComplexProperty(a => a.Money, money =>
       {
         money.Property(m => m.Amount);
@@ -27,7 +30,6 @@ public class CbsContext(DbContextOptions<CbsContext> options) : DbContext(option
 
     modelBuilder.Entity<Client>(client =>
     {
-      client.HasKey(c => c.Id);
       client.ComplexProperty(c => c.Info, info =>
       {
         info.Property(i => i.Email);

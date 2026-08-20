@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CBS.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(CbsContext))]
-    [Migration("20260819185739_InitialCreate")]
+    [Migration("20260820200017_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -25,6 +25,9 @@ namespace CBS.Infrastructure.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ClientId")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsBlocked")
@@ -44,6 +47,8 @@ namespace CBS.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClientId");
+
                     b.ToTable("Accounts");
                 });
 
@@ -51,6 +56,9 @@ namespace CBS.Infrastructure.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT");
 
                     b.ComplexProperty(typeof(Dictionary<string, object>), "Info", "CBS.Core.Clients.Domain.Client.Info#ClientInfo", b1 =>
@@ -91,6 +99,15 @@ namespace CBS.Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Clients");
+                });
+
+            modelBuilder.Entity("CBS.Core.Accounts.Domain.Account", b =>
+                {
+                    b.HasOne("CBS.Core.Clients.Domain.Client", null)
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
