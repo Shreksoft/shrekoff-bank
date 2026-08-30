@@ -1,7 +1,7 @@
 using CBS.Core.Accounts.Domain;
 using CBS.Core.Accounts.Services;
 
-namespace CBS.Core.Infrastructure.Providers.Rates;
+namespace CBS.Infrastructure.Data.Providers.Rates;
 
 public class InMemoryConvertRateProvider : IConvertRateProvider
 {

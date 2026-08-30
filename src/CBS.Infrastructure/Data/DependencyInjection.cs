@@ -1,9 +1,9 @@
 using CBS.Core;
 using CBS.Core.Accounts.Services;
 using CBS.Core.Clients.Services;
-using CBS.Core.Infrastructure.Providers.Rates;
 using CBS.Infrastructure.Data.Accounts;
 using CBS.Infrastructure.Data.Clients;
+using CBS.Infrastructure.Data.Providers.Rates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
