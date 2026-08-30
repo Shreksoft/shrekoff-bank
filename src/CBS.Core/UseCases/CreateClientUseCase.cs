@@ -13,6 +13,6 @@ public class CreateClientUseCase(ClientService clientService)
       throw new ArgumentException(
         $"Age({clientInfo.BirthDate.Age}) is small for creating account (account is allowed for {MinAge} age)");
 
-    return clientService.CreateClient(clientInfo);
+    return clientService.CreateClient(clientInfo).Id;
   }
 }
