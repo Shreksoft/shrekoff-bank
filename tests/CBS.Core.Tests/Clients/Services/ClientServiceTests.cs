@@ -1,19 +1,23 @@
 using CBS.Core.Clients.Domain;
 using CBS.Core.Clients.Services;
-using CBS.Core.Infrastructure.Data;
-using CBS.Core.Infrastructure.Data.Clients;
+using Moq;
 
 namespace CBS.Core.Tests.Clients.Services;
 
 public class ClientServiceTests
 {
+  private readonly ClientService _clientService;
+  private readonly Mock<IClientRepository> _clientRepository = new();
+  private readonly Mock<IUnitOfWork> _unitOfWork = new();
+
+  public ClientServiceTests()
+  {
+    _clientService = new ClientService(_unitOfWork.Object, _clientRepository.Object);
+  }
+
   [Fact]
   public void CreateClient_CorrectClientData_ClientAddedInBase()
   {
-    var table = new Table<Client>();
-    var unitOfWork = new UnitOfWork();
-    var repo = new InMemoryClientRepository(table, unitOfWork);
-    var clientService = new ClientService(unitOfWork, repo);
     var ci = new ClientInfo(
       new FullName("1", "2", "3"),
       new BirthDate(new DateOnly(1990, 01, 01)),
@@ -21,10 +25,14 @@ public class ClientServiceTests
       null
     );
 
-    var id = clientService.CreateClient(ci);
-    var client = clientService.GetById(id);
+    var client = _clientService.CreateClient(ci);
 
-    Assert.Equal(id, client.Id);
-    Assert.Equal(ci, client.Info);
+    _clientRepository.Verify(r => r.Add(client), Times.Once());
+    _unitOfWork.Verify(u => u.SaveChanges(), Times.Once());
+
+    _clientRepository.Setup(r => r.FindById(client.Id)).Returns(client);
+    var clientFromService = _clientService.GetById(client.Id);
+    Assert.Equal(clientFromService.Id, client.Id);
+    Assert.Equal(ci, clientFromService.Info);
   }
 }
