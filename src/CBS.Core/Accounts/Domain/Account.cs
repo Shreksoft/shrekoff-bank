@@ -17,7 +17,6 @@ public class Account(Guid id, Guid clientId, Money money, bool isBlocked)
   public void Debit(decimal amount)
   {
     if (amount <= 0) throw new AmountIsNegativeException(Id, amount);
-
     if (IsBlocked) throw new AccountBlockedException(Id);
 
     var balance = Money.Amount;
@@ -42,11 +41,5 @@ public class Account(Guid id, Guid clientId, Money money, bool isBlocked)
   public void Unblock()
   {
     IsBlocked = false;
-  }
-
-  public void EnsureSameCurrency(Account other)
-  {
-    if (Money.Currency != other.Money.Currency)
-      throw new CurrencyMismatchException(Money.Currency, other.Money.Currency);
   }
 }

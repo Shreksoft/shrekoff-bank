@@ -68,24 +68,6 @@ public class AccountTests
   }
 
   [Fact]
-  public void EnsureSameCurrency_CurrenciesTheSame_Void()
-  {
-    var acc1 = CreateAccount();
-    var acc2 = CreateAccount();
-
-    acc1.EnsureSameCurrency(acc2);
-  }
-
-  [Fact]
-  public void EnsureSameCurrency_CurrenciesTheDifferent_Throws()
-  {
-    var acc1 = CreateAccount();
-    var acc2 = CreateAccount(Currency.PIZ);
-
-    Assert.Throws<CurrencyMismatchException>(() => acc1.EnsureSameCurrency(acc2));
-  }
-
-  [Fact]
   public async Task Debit_WhenCalledConcurrentlyTotalExceedsBalance_BalanceIsPositive()
   {
     var account = CreateAccount();
