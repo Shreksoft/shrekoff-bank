@@ -31,7 +31,7 @@ public class ExceptionMiddleware(RequestDelegate next)
       LogInConsole(ex);
       await SendHttpWithStatus400(httpContext, new
       {
-        ex.Message, ex.Currency, ex.CurrencyOther
+        ex.Message, Currency = ex.CurrencyCode, CurrencyOther = ex.CurrencyCodeOther
       });
     }
     catch (ObjectNotFoundException ex)

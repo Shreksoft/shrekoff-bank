@@ -15,9 +15,7 @@ Content-Type: application/json
 }
 
 > {%
-
  client.global.set("clientId", response.body.id);
-
 %}
 
 ###
@@ -31,13 +29,11 @@ Content-Type: application/json
 
 {
   "clientId": "{{clientId}}",
-  "currency": 1
+  "currencyCode": 2
 }
 
 > {%
-
  client.global.set("accountId", response.body.id);
-
 %}
 
 ###
@@ -49,9 +45,9 @@ POST {{Api_HostAddress}}/api/Account/Transfer
 Content-Type: application/json
 
 {
-  "senderAccId": "85ccd9e4-0adb-4dcb-b94c-4f1787d1fc8f",
-  "recipientAccId": "335a4177-4bf2-46fa-9fdc-9ba50170f865",
-  "amount": 90
+  "senderAccId": "6FEC9270-C6C3-4259-9125-59937DC7DB3A",
+  "recipientAccId": "3476F5FA-25E2-4418-A2B2-FAB0FFB16544",
+  "amount": 90.000016
 }
 
 
@@ -61,5 +57,5 @@ Content-Type: application/json
 
 {
   "accountId": "{{accountId}}",
-  "amount": 100
+  "amount": 100.227
 }

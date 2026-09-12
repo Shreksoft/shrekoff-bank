@@ -1,8 +1,8 @@
-﻿using CBS.Core.Accounts.Domain;
+﻿using CBS.Core.Accounts.Domain.Currencies;
 
 namespace CBS.Api.Controllers.Accounts.Dto;
 
 public record CreateAccountDto(
   Guid ClientId,
-  Currency Currency
+  CurrencyCode CurrencyCode
 );

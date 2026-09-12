@@ -1,18 +1,26 @@
+using CBS.Core.Accounts.Domain.Currencies;
 using CBS.Core.Accounts.Domain.Exceptions;
 
 namespace CBS.Core.Accounts.Domain;
 
 public class Account(Guid id, Guid clientId, Money money, bool isBlocked)
 {
-  public Guid Id { get; private set; } = id;
+  public Account(Guid clientId, Money money) : this(Guid.NewGuid(), clientId, money, false)
+  {
+    var isValidCcy = Currency.IsValid(money.Currency);
+    if (!isValidCcy)
+      throw new ArgumentException("Invalid currency");
+  }
+
+  // for EFCore ()
+  private Account() : this(Guid.Empty, Guid.Empty, default, false)
+  {
+  }
+
+  public Guid Id { get; init; } = id;
   public Guid ClientId { get; private set; } = clientId;
   public Money Money { get; private set; } = money;
   public bool IsBlocked { get; private set; } = isBlocked;
-
-  public Account(Guid clientId, Money money) : this(Guid.NewGuid(), clientId, money, false) { }
-
-  // for EFCore ()
-  private Account() : this(Guid.Empty, Guid.Empty, default, false) { }
 
   public void Debit(decimal amount)
   {

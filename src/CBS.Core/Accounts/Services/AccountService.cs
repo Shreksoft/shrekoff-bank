@@ -1,9 +1,13 @@
 using CBS.Core.Accounts.Domain;
+using CBS.Core.Accounts.Domain.Currencies;
 using CBS.Core.Exceptions;
 
 namespace CBS.Core.Accounts.Services;
 
-public class AccountService(IUnitOfWork unitOfWork, IAccountRepository repository, IConvertRateProvider convertRateProvider)
+public class AccountService(
+  IUnitOfWork unitOfWork,
+  IAccountRepository repository,
+  IConvertRateProvider convertRateProvider)
 {
   public Account CreateAccount(Guid clientId, Money money)
   {
@@ -29,18 +33,15 @@ public class AccountService(IUnitOfWork unitOfWork, IAccountRepository repositor
     unitOfWork.SaveChanges();
   }
 
-  public Guid Transfer(Guid senderAccId, Guid recipientAccId, decimal amount)
+  public Guid Transfer(Guid senderId, Guid recipientId, decimal amount)
   {
-    if (senderAccId == recipientAccId)
+    if (senderId == recipientId)
       throw new InvalidOperationException("Transfers between the same account are prohibited");
 
-    var sender = GetById(senderAccId);
-    var recipient = GetById(recipientAccId);
-    var senderCurr = sender.Money.Currency;
-    var recipientCurr = recipient.Money.Currency;
+    var sender = GetById(senderId);
+    var recipient = GetById(recipientId);
 
-    var rate = convertRateProvider.GetRate(senderCurr, recipientCurr);
-    var convertedAmount = (decimal)rate * amount;
+    var convertedAmount = ConvertAmount(sender.Money.Currency, recipient.Money.Currency, amount);
 
     sender.Debit(amount);
     repository.Update(sender);
@@ -65,5 +66,12 @@ public class AccountService(IUnitOfWork unitOfWork, IAccountRepository repositor
     repository.Update(account);
     unitOfWork.SaveChanges();
     return account.Money.Amount;
+  }
+
+  private decimal ConvertAmount(Currency senderCurrency, Currency recipientCurrency, decimal amount)
+  {
+    var rate = convertRateProvider.GetRate(senderCurrency.Code, recipientCurrency.Code);
+    var convertedAmount = (decimal)rate * amount;
+    return Math.Round(convertedAmount, recipientCurrency.Scale);
   }
 }

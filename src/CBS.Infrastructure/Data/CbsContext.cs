@@ -2,7 +2,6 @@ using CBS.Core.Accounts.Domain;
 using CBS.Core.Clients.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Options;
 
 namespace CBS.Infrastructure.Data;
 
@@ -24,7 +23,11 @@ public class CbsContext(DbContextOptions<CbsContext> options) : DbContext(option
       account.ComplexProperty(a => a.Money, money =>
       {
         money.Property(m => m.Amount);
-        money.Property(m => m.Currency).HasConversion<string>();
+        money.ComplexProperty(m => m.Currency, currency =>
+        {
+          currency.Property(c => c.Scale);
+          currency.Property(c => c.Code).HasConversion<string>();
+        });
       });
     });
 
@@ -58,7 +61,7 @@ public class CbsContextFactory : IDesignTimeDbContextFactory<CbsContext>
   public CbsContext CreateDbContext(string[] args)
   {
     var options = new DbContextOptionsBuilder<CbsContext>()
-      .UseSqlite("Data Source=fake.bd")
+      .UseSqlite("Data Source=fake.db")
       .Options;
 
     return new CbsContext(options);
