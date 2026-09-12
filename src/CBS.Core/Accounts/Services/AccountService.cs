@@ -72,6 +72,6 @@ public class AccountService(
   {
     var rate = convertRateProvider.GetRate(senderCurrency.Code, recipientCurrency.Code);
     var convertedAmount = (decimal)rate * amount;
-    return Math.Round(convertedAmount, recipientCurrency.Scale);
+    return convertedAmount;
   }
 }

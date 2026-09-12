@@ -79,7 +79,7 @@ public class AccountServiceTests
   [InlineData(CurrencyCode.SLP, CurrencyCode.PIZ, 10, 25, 2.5)]
   [InlineData(CurrencyCode.PIZ, CurrencyCode.SLP, 10, 12, 1.2)]
   [InlineData(CurrencyCode.PIZ, CurrencyCode.SLP, 100, 50, 0.5)]
-  public void Transfer_RecipientAndSenderDifferentCurrency_CorrectConvert(CurrencyCode currFrom, CurrencyCode currTo,
+  public void Transfer_DifferentCurrency_CorrectConvert(CurrencyCode currFrom, CurrencyCode currTo,
     decimal amountFrom, decimal amountTo, double rate)
   {
     var (sender, recipient) = CreateAccountPairBypassService(currFrom, currTo, rate);

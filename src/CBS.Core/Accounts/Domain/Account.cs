@@ -7,8 +7,7 @@ public class Account(Guid id, Guid clientId, Money money, bool isBlocked)
 {
   public Account(Guid clientId, Money money) : this(Guid.NewGuid(), clientId, money, false)
   {
-    var isValidCcy = Currency.IsValid(money.Currency);
-    if (!isValidCcy)
+    if (!Currency.IsValid(money.Currency))
       throw new ArgumentException("Invalid currency");
   }
 
@@ -30,7 +29,8 @@ public class Account(Guid id, Guid clientId, Money money, bool isBlocked)
     var balance = Money.Amount;
     if (amount > balance) throw new InsufficientFundsException(Id, balance);
 
-    Money = Money with { Amount = balance - amount };
+    var newAmount = Math.Round(balance - amount, Money.Currency.Scale);
+    Money = Money with { Amount = newAmount };
   }
 
   public void Credit(decimal amount)
@@ -38,7 +38,8 @@ public class Account(Guid id, Guid clientId, Money money, bool isBlocked)
     if (amount <= 0) throw new AmountIsNegativeException(Id, amount);
     if (IsBlocked) throw new AccountBlockedException(Id);
 
-    Money = Money with { Amount = Money.Amount + amount };
+    var newAmount = Math.Round(Money.Amount + amount, Money.Currency.Scale);
+    Money = Money with { Amount = newAmount };
   }
 
   public void Block()
