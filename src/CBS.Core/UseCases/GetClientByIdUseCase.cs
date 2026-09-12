@@ -7,6 +7,6 @@ public class GetClientByIdUseCase(ClientService clientService)
 {
   public Client Execute(Guid id)
   {
-    return clientService.GetById(id);
+    return clientService.GetByIdOrThrow(id);
   }
 }

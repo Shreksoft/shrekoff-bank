@@ -14,7 +14,7 @@ public class ClientService(IUnitOfWork unitOfWork, IClientRepository repository)
     return client;
   }
 
-  public Client GetById(Guid id)
+  public Client GetByIdOrThrow(Guid id)
   {
     return repository.FindById(id) ?? throw new ObjectNotFoundException(id);
   }

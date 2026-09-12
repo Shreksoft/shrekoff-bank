@@ -10,7 +10,7 @@ public class CreateAccountUseCase(ClientService clientService, AccountService ac
   public Guid Execute(Guid clientId, CurrencyCode currencyCode)
   {
     //ensure that client exists
-    clientService.GetById(clientId);
+    clientService.GetByIdOrThrow(clientId);
 
     var money = new Money(new Currency(currencyCode), 0);
     var account = accountService.CreateAccount(clientId, money);

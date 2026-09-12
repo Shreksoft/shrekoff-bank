@@ -18,7 +18,7 @@ public class AccountController : BaseApiController
   [HttpGet("{accountId:guid}")]
   public IActionResult GetAccountById(Guid accountId, [FromServices] AccountService accountService)
   {
-    var account = accountService.GetById(accountId);
+    var account = accountService.GetByIdOrThrow(accountId);
     return Ok(new { account });
   }
 

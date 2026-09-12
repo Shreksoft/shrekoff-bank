@@ -19,7 +19,7 @@ public class AccountService(
 
   public void OpenAccount(Guid accountId)
   {
-    var account = GetById(accountId);
+    var account = GetByIdOrThrow(accountId);
     account.Unblock();
     repository.Update(account);
     unitOfWork.SaveChanges();
@@ -27,7 +27,7 @@ public class AccountService(
 
   public void BlockAccount(Guid accountId)
   {
-    var account = GetById(accountId);
+    var account = GetByIdOrThrow(accountId);
     account.Block();
     repository.Update(account);
     unitOfWork.SaveChanges();
@@ -38,8 +38,8 @@ public class AccountService(
     if (senderId == recipientId)
       throw new InvalidOperationException("Transfers between the same account are prohibited");
 
-    var sender = GetById(senderId);
-    var recipient = GetById(recipientId);
+    var sender = GetByIdOrThrow(senderId);
+    var recipient = GetByIdOrThrow(recipientId);
 
     var convertedAmount = ConvertAmount(sender.Money.Currency, recipient.Money.Currency, amount);
 
@@ -53,7 +53,7 @@ public class AccountService(
     return transferId;
   }
 
-  public Account GetById(Guid accountId)
+  public Account GetByIdOrThrow(Guid accountId)
   {
     return repository.FindById(accountId)
            ?? throw new ObjectNotFoundException(accountId);
@@ -61,7 +61,7 @@ public class AccountService(
 
   public decimal Deposit(Guid accountId, decimal amount)
   {
-    var account = GetById(accountId);
+    var account = GetByIdOrThrow(accountId);
     account.Credit(amount);
     repository.Update(account);
     unitOfWork.SaveChanges();

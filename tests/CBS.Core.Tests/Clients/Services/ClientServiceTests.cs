@@ -31,7 +31,7 @@ public class ClientServiceTests
     _unitOfWork.Verify(u => u.SaveChanges(), Times.Once());
 
     _clientRepository.Setup(r => r.FindById(client.Id)).Returns(client);
-    var clientFromService = _clientService.GetById(client.Id);
+    var clientFromService = _clientService.GetByIdOrThrow(client.Id);
     Assert.Equal(clientFromService.Id, client.Id);
     Assert.Equal(ci, clientFromService.Info);
   }
