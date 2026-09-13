@@ -1,4 +1,4 @@
-using CBS.Core;
+using CBS.Application;
 
 namespace CBS.Infrastructure.Data;
 

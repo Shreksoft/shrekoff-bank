@@ -1,4 +1,4 @@
-namespace CBS.Core;
+namespace CBS.Application;
 
 public interface IUnitOfWork
 {

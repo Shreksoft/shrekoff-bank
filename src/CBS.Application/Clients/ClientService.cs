@@ -1,7 +1,7 @@
 using CBS.Core.Clients.Domain;
-using CBS.Core.Exceptions;
+using ObjectNotFoundException = CBS.Application.Shared.ObjectNotFoundException;
 
-namespace CBS.Core.Clients.Services;
+namespace CBS.Application.Clients;
 
 public class ClientService(IUnitOfWork unitOfWork, IClientRepository repository)
 {

@@ -1,36 +1,26 @@
+using CBS.Application.Clients;
 using CBS.Core.Accounts.Domain;
 using CBS.Core.Accounts.Domain.Currencies;
-using CBS.Core.Exceptions;
+using ObjectNotFoundException = CBS.Application.Shared.ObjectNotFoundException;
 
-namespace CBS.Core.Accounts.Services;
+namespace CBS.Application.Accounts;
 
 public class AccountService(
   IUnitOfWork unitOfWork,
-  IAccountRepository repository,
+  IAccountRepository accountRepository,
+  IClientRepository clientRepository,
   IConvertRateProvider convertRateProvider)
 {
-  public Account CreateAccount(Guid clientId, Money money)
+  public Account OpenAccount(Guid clientId, CurrencyCode currencyCode)
   {
+    if (clientRepository.FindById(clientId) is null)
+      throw new ObjectNotFoundException(clientId);
+
+    var money = new Money(new Currency(currencyCode), 0);
     var account = new Account(clientId, money);
-    repository.Add(account);
+    accountRepository.Add(account);
     unitOfWork.SaveChanges();
     return account;
-  }
-
-  public void OpenAccount(Guid accountId)
-  {
-    var account = GetByIdOrThrow(accountId);
-    account.Unblock();
-    repository.Update(account);
-    unitOfWork.SaveChanges();
-  }
-
-  public void BlockAccount(Guid accountId)
-  {
-    var account = GetByIdOrThrow(accountId);
-    account.Block();
-    repository.Update(account);
-    unitOfWork.SaveChanges();
   }
 
   public Guid Transfer(Guid senderId, Guid recipientId, decimal amount)
@@ -44,9 +34,9 @@ public class AccountService(
     var convertedAmount = ConvertAmount(sender.Money.Currency, recipient.Money.Currency, amount);
 
     sender.Debit(amount);
-    repository.Update(sender);
+    accountRepository.Update(sender);
     recipient.Credit(convertedAmount);
-    repository.Update(recipient);
+    accountRepository.Update(recipient);
     unitOfWork.SaveChanges();
 
     var transferId = Guid.NewGuid();
@@ -55,7 +45,7 @@ public class AccountService(
 
   public Account GetByIdOrThrow(Guid accountId)
   {
-    return repository.FindById(accountId)
+    return accountRepository.FindById(accountId)
            ?? throw new ObjectNotFoundException(accountId);
   }
 
@@ -63,7 +53,7 @@ public class AccountService(
   {
     var account = GetByIdOrThrow(accountId);
     account.Credit(amount);
-    repository.Update(account);
+    accountRepository.Update(account);
     unitOfWork.SaveChanges();
     return account.Money.Amount;
   }

@@ -1,6 +1,7 @@
-using CBS.Core;
-using CBS.Core.Accounts.Services;
-using CBS.Core.Clients.Services;
+using CBS.Application;
+using CBS.Application.Accounts;
+using CBS.Application.Clients;
+// using CBS.Core;
 using CBS.Infrastructure.Data.Accounts;
 using CBS.Infrastructure.Data.Clients;
 using CBS.Infrastructure.Data.Providers.Rates;

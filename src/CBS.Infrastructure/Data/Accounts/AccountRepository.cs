@@ -1,5 +1,5 @@
+using CBS.Application.Accounts;
 using CBS.Core.Accounts.Domain;
-using CBS.Core.Accounts.Services;
 
 namespace CBS.Infrastructure.Data.Accounts;
 

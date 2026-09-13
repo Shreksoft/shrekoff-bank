@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CBS.Core\CBS.Core.csproj" />
     <ProjectReference Include="..\CBS.Infrastructure\Data\CBS.Infrastructure.Data.csproj" />
+    <ProjectReference Include="..\CBS.Application\CBS.Application.csproj" />
   </ItemGroup>
 
 </Project>

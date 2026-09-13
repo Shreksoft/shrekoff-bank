@@ -1,7 +1,9 @@
+using CBS.Application;
+using CBS.Application.Accounts;
+using CBS.Application.Clients;
 using CBS.Core.Accounts.Domain;
 using CBS.Core.Accounts.Domain.Currencies;
 using CBS.Core.Accounts.Domain.Exceptions;
-using CBS.Core.Accounts.Services;
 using Moq;
 
 namespace CBS.Core.Tests.Accounts.Services;
@@ -9,13 +11,14 @@ namespace CBS.Core.Tests.Accounts.Services;
 public class AccountServiceTests
 {
   private readonly Mock<IAccountRepository> _accountRepository = new();
+  private readonly Mock<IClientRepository> _clientRepository = new();
   private readonly AccountService _accountService;
   private readonly Mock<IConvertRateProvider> _ratesProvider = new();
   private readonly Mock<IUnitOfWork> _unitOfWork = new();
 
   public AccountServiceTests()
   {
-    _accountService = new AccountService(_unitOfWork.Object, _accountRepository.Object, _ratesProvider.Object);
+    _accountService = new AccountService(_unitOfWork.Object, _accountRepository.Object, _clientRepository.Object, _ratesProvider.Object);
   }
 
   private (Account, Account) CreateAccountPairBypassService(CurrencyCode senderCurr = CurrencyCode.SLP,

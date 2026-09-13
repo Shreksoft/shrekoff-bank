@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\CBS.Core\CBS.Core.csproj" />
+    <ProjectReference Include="..\..\CBS.Application\CBS.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

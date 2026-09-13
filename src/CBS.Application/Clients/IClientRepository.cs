@@ -1,6 +1,6 @@
 using CBS.Core.Clients.Domain;
 
-namespace CBS.Core.Clients.Services;
+namespace CBS.Application.Clients;
 
 public interface IClientRepository
 {

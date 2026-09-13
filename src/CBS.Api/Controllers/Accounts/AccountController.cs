@@ -1,6 +1,5 @@
 ﻿using CBS.Api.Controllers.Accounts.Dto;
-using CBS.Core.Accounts.Services;
-using CBS.Core.UseCases;
+using CBS.Application.Accounts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CBS.Api.Controllers.Accounts;
@@ -8,10 +7,10 @@ namespace CBS.Api.Controllers.Accounts;
 public class AccountController : BaseApiController
 {
   [HttpPost("[action]")]
-  public IActionResult Create(CreateAccountDto dto, [FromServices] CreateAccountUseCase useCase)
+  public IActionResult Create(CreateAccountDto dto, [FromServices] AccountService accountService)
   {
     var (clientId, currency) = dto;
-    var accountId = useCase.Execute(clientId, currency);
+    var accountId = accountService.OpenAccount(clientId, currency).Id;
     return CreatedAtAction(nameof(GetAccountById), new { accountId }, new { id = accountId });
   }
 
@@ -23,10 +22,10 @@ public class AccountController : BaseApiController
   }
 
   [HttpPost("[action]")]
-  public IActionResult Transfer(TransferDto dto, [FromServices] TransferUseCase useCase)
+  public IActionResult Transfer(TransferDto dto, [FromServices] AccountService accountService)
   {
     var (senderAccountId, recipientAccountId, amount) = dto;
-    var guid = useCase.Execute(senderAccountId, recipientAccountId, amount);
+    var guid = accountService.Transfer(senderAccountId, recipientAccountId, amount);
     return Ok(new { guid });
   }
 

@@ -1,4 +1,4 @@
-﻿namespace CBS.Core.Exceptions;
+namespace CBS.Application.Shared;
 
 public class ObjectNotFoundException(Guid id) : Exception($"{id} {Msg}")
 {

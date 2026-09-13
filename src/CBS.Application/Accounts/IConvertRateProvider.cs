@@ -1,6 +1,6 @@
 using CBS.Core.Accounts.Domain.Currencies;
 
-namespace CBS.Core.Accounts.Services;
+namespace CBS.Application.Accounts;
 
 public interface IConvertRateProvider
 {

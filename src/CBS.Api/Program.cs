@@ -1,7 +1,6 @@
 using CBS.Api.Middlewares;
-using CBS.Core.Accounts.Services;
-using CBS.Core.Clients.Services;
-using CBS.Core.UseCases;
+using CBS.Application.Accounts;
+using CBS.Application.Clients;
 using CBS.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,10 +16,6 @@ builder.Services.AddOpenApi();
 builder.Services.AddData(builder.Configuration);
 builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<ClientService>();
-builder.Services.AddScoped<CreateClientUseCase>();
-builder.Services.AddScoped<GetClientByIdUseCase>();
-builder.Services.AddScoped<CreateAccountUseCase>();
-builder.Services.AddScoped<TransferUseCase>();
 
 // Create and run app
 var app = builder.Build();

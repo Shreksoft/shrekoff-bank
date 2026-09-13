@@ -1,5 +1,5 @@
-﻿using CBS.Core.Accounts.Domain.Exceptions;
-using CBS.Core.Exceptions;
+﻿using CBS.Application.Shared;
+using CBS.Core.Accounts.Domain.Exceptions;
 
 namespace CBS.Api.Middlewares;
 
