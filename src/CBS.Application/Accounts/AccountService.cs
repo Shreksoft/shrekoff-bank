@@ -1,7 +1,7 @@
 using CBS.Application.Clients;
 using CBS.Core.Accounts.Domain;
 using CBS.Core.Accounts.Domain.Currencies;
-using ObjectNotFoundException = CBS.Application.Shared.ObjectNotFoundException;
+using CBS.Application.Shared;
 
 namespace CBS.Application.Accounts;
 
@@ -34,9 +34,8 @@ public class AccountService(
     var convertedAmount = ConvertAmount(sender.Money.Currency, recipient.Money.Currency, amount);
 
     sender.Debit(amount);
-    accountRepository.Update(sender);
     recipient.Credit(convertedAmount);
-    accountRepository.Update(recipient);
+
     unitOfWork.SaveChanges();
 
     var transferId = Guid.NewGuid();
@@ -53,7 +52,6 @@ public class AccountService(
   {
     var account = GetByIdOrThrow(accountId);
     account.Credit(amount);
-    accountRepository.Update(account);
     unitOfWork.SaveChanges();
     return account.Money.Amount;
   }

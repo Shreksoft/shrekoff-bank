@@ -45,9 +45,6 @@ public class AccountServiceTests
 
     _accountService.Transfer(sender.Id, recipient.Id, amount);
 
-    _accountRepository.Verify(r => r.Update(sender), Times.Once());
-    _accountRepository.Verify(r => r.Update(recipient), Times.Once());
-
     _unitOfWork.Verify(u => u.SaveChanges(), Times.Once());
 
     Assert.Equal(0, sender.Money.Amount);
@@ -63,9 +60,6 @@ public class AccountServiceTests
     recipient.Block();
 
     Assert.Throws<AccountBlockedException>(() => _accountService.Transfer(sender.Id, recipient.Id, amount));
-
-    _accountRepository.Verify(r => r.Update(sender), Times.Once());
-    _accountRepository.Verify(r => r.Update(recipient), Times.Never());
 
     _unitOfWork.Verify(u => u.SaveChanges(), Times.Never());
   }
@@ -90,9 +84,6 @@ public class AccountServiceTests
     sender.Credit(amountFrom);
 
     var ex = Record.Exception(() => _accountService.Transfer(sender.Id, recipient.Id, amountFrom));
-
-    _accountRepository.Verify(r => r.Update(sender), Times.Once());
-    _accountRepository.Verify(r => r.Update(recipient), Times.Once());
 
     _unitOfWork.Verify(u => u.SaveChanges(), Times.Once());
 
