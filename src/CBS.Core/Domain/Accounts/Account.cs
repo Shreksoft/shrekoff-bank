@@ -3,23 +3,28 @@ using CBS.Core.Accounts.Domain.Exceptions;
 
 namespace CBS.Core.Accounts.Domain;
 
-public class Account(Guid id, Guid clientId, Money money, bool isBlocked)
+public class Account
 {
-  public Account(Guid clientId, Money money) : this(Guid.NewGuid(), clientId, money, false)
+  public Account(Guid clientId, Money money)
   {
     if (!Currency.IsValid(money.Currency))
       throw new ArgumentException("Invalid currency");
+
+    Id = Guid.NewGuid();
+    ClientId = clientId;
+    Money = money;
+    IsBlocked = false;
   }
 
-  // for EFCore ()
-  private Account() : this(Guid.Empty, Guid.Empty, default, false)
+  // for EF
+  private Account()
   {
   }
 
-  public Guid Id { get; init; } = id;
-  public Guid ClientId { get; private set; } = clientId;
-  public Money Money { get; private set; } = money;
-  public bool IsBlocked { get; private set; } = isBlocked;
+  public Guid Id { get; init; }
+  public Guid ClientId { get; private set; }
+  public Money Money { get; private set; }
+  public bool IsBlocked { get; private set; }
 
   public void Debit(decimal amount)
   {
