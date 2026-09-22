@@ -12,6 +12,19 @@ public class AccountTests
   }
 
   [Fact]
+  public void Constructor_InvalidCurrency_Throws()
+  {
+    Assert.Throws<ArgumentException>(() => new Account(Guid.NewGuid(), Guid.NewGuid(), new Money(default, 0), false));
+  }
+
+  [Fact]
+  public void Constructor_NegativeInitialBalance_Throws()
+  {
+    Assert.Throws<ArgumentException>(() =>
+      new Account(Guid.NewGuid(), Guid.NewGuid(), new Money(new Currency(CurrencyCode.SLP), -1), false));
+  }
+
+  [Fact]
   public void Debit_SufficientBalance_DecreasesBalance()
   {
     const byte amount = 100;

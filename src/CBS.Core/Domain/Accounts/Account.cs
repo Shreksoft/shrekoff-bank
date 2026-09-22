@@ -7,19 +7,26 @@ public class Account(Guid id, Guid clientId, Money money, bool isBlocked)
 {
   public Account(Guid clientId, Money money) : this(Guid.NewGuid(), clientId, money, false)
   {
-    if (!Currency.IsValid(money.Currency))
-      throw new ArgumentException("Invalid currency");
   }
 
   // for EFCore ()
-  private Account() : this(Guid.Empty, Guid.Empty, default, false)
+  private Account() : this(Guid.Empty, Guid.Empty, new Money(new Currency(CurrencyCode.SLP), 0), false)
   {
   }
 
   public Guid Id { get; init; } = id;
   public Guid ClientId { get; private set; } = clientId;
-  public Money Money { get; private set; } = money;
+  public Money Money { get; private set; } = ValidateMoney(money);
   public bool IsBlocked { get; private set; } = isBlocked;
+
+  private static Money ValidateMoney(Money money)
+  {
+    if (!Currency.IsValid(money.Currency))
+      throw new ArgumentException("Invalid currency");
+    if (money.Amount < 0)
+      throw new ArgumentException("Initial balance cannot be negative");
+    return money;
+  }
 
   public void Debit(decimal amount)
   {
