@@ -1,5 +1,6 @@
 using CBS.Core.Accounts.Domain;
 using CBS.Core.Clients.Domain;
+using CBS.Core.Domain.Transfers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
@@ -9,6 +10,7 @@ public class CbsContext(DbContextOptions<CbsContext> options) : DbContext(option
 {
   public DbSet<Account> Accounts { get; set; }
   public DbSet<Client> Clients { get; set; }
+  public DbSet<Transfer> Transfers { get; set; }
 
   // hand mapping for EF. Because EF can't map complex values like Money model etc.
   protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -51,6 +53,7 @@ public class CbsContext(DbContextOptions<CbsContext> options) : DbContext(option
       });
     });
 
+    modelBuilder.ApplyConfigurationsFromAssembly(typeof(CbsContext).Assembly);
     base.OnModelCreating(modelBuilder);
   }
 }

@@ -1,10 +1,10 @@
 using CBS.Application;
 using CBS.Application.Accounts;
 using CBS.Application.Clients;
-// using CBS.Core;
 using CBS.Infrastructure.Data.Accounts;
 using CBS.Infrastructure.Data.Clients;
 using CBS.Infrastructure.Data.Providers.Rates;
+using CBS.Infrastructure.Data.Transfers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +17,7 @@ public static class DependencyInjection
   {
     services.AddScoped<IAccountRepository, AccountRepository>();
     services.AddScoped<IClientRepository, ClientRepository>();
+    services.AddScoped<ITransferRepository, TransferRepository>();
     services.AddScoped<IUnitOfWork, UnitOfWork>();
     services.AddScoped<IConvertRateProvider, InMemoryConvertRateProvider>();
 

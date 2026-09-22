@@ -4,5 +4,5 @@ namespace CBS.Application.Accounts;
 
 public interface IConvertRateProvider
 {
-  public double GetRate(CurrencyCode fromCurr, CurrencyCode toCurr);
+  public decimal GetRate(CurrencyCode fromCurr, CurrencyCode toCurr);
 }

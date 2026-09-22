@@ -2,6 +2,7 @@ using CBS.Application.Clients;
 using CBS.Core.Accounts.Domain;
 using CBS.Core.Accounts.Domain.Currencies;
 using CBS.Application.Shared;
+using CBS.Core.Domain.Transfers;
 
 namespace CBS.Application.Accounts;
 
@@ -9,6 +10,7 @@ public class AccountService(
   IUnitOfWork unitOfWork,
   IAccountRepository accountRepository,
   IClientRepository clientRepository,
+  ITransferRepository transferRepository,
   IConvertRateProvider convertRateProvider)
 {
   public Account OpenAccount(Guid clientId, CurrencyCode currencyCode)
@@ -23,23 +25,23 @@ public class AccountService(
     return account;
   }
 
-  public Guid Transfer(Guid senderId, Guid recipientId, decimal amount)
+  public Transfer Transfer(Guid senderAccountId, Guid recipientAccountId, decimal amount)
   {
-    if (senderId == recipientId)
-      throw new InvalidOperationException("Transfers between the same account are prohibited");
+    var sender = GetByIdOrThrow(senderAccountId);
+    var recipient = GetByIdOrThrow(recipientAccountId);
 
-    var sender = GetByIdOrThrow(senderId);
-    var recipient = GetByIdOrThrow(recipientId);
+    var rate = convertRateProvider.GetRate(sender.Money.Currency.Code, recipient.Money.Currency.Code);
+    var senderInfo = new TransferSide(sender.Id, sender.ClientId, sender.Money.Currency);
+    var recipientInfo = new TransferSide(recipient.Id, recipient.ClientId, recipient.Money.Currency);
+    var transfer = new Transfer(senderInfo, recipientInfo, amount, rate);
 
-    var convertedAmount = ConvertAmount(sender.Money.Currency, recipient.Money.Currency, amount);
+    sender.Debit(transfer.SenderAmount);
+    recipient.Credit(transfer.RecipientAmount);
 
-    sender.Debit(amount);
-    recipient.Credit(convertedAmount);
-
+    transferRepository.Add(transfer);
     unitOfWork.SaveChanges();
 
-    var transferId = Guid.NewGuid();
-    return transferId;
+    return transfer;
   }
 
   public Account GetByIdOrThrow(Guid accountId)
@@ -54,12 +56,5 @@ public class AccountService(
     account.Credit(amount);
     unitOfWork.SaveChanges();
     return account.Money.Amount;
-  }
-
-  private decimal ConvertAmount(Currency senderCurrency, Currency recipientCurrency, decimal amount)
-  {
-    var rate = convertRateProvider.GetRate(senderCurrency.Code, recipientCurrency.Code);
-    var convertedAmount = (decimal)rate * amount;
-    return convertedAmount;
   }
 }

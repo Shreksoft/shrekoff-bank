@@ -12,17 +12,18 @@ public class AccountServiceTests
 {
   private readonly Mock<IAccountRepository> _accountRepository = new();
   private readonly Mock<IClientRepository> _clientRepository = new();
+  private readonly Mock<ITransferRepository> _transferRepository = new();
   private readonly AccountService _accountService;
   private readonly Mock<IConvertRateProvider> _ratesProvider = new();
   private readonly Mock<IUnitOfWork> _unitOfWork = new();
 
   public AccountServiceTests()
   {
-    _accountService = new AccountService(_unitOfWork.Object, _accountRepository.Object, _clientRepository.Object, _ratesProvider.Object);
+    _accountService = new AccountService(_unitOfWork.Object, _accountRepository.Object, _clientRepository.Object, _transferRepository.Object, _ratesProvider.Object);
   }
 
   private (Account, Account) CreateAccountPairBypassService(CurrencyCode senderCurr = CurrencyCode.SLP,
-    CurrencyCode recipientCurr = CurrencyCode.SLP, double rate = 1.0)
+    CurrencyCode recipientCurr = CurrencyCode.SLP, decimal rate = 1.0m)
   {
     var money1 = new Money(new Currency(senderCurr), 0);
     var acc1 = new Account(Guid.NewGuid(), money1);
@@ -43,12 +44,12 @@ public class AccountServiceTests
     var (sender, recipient) = CreateAccountPairBypassService();
     sender.Credit(amount);
 
-    _accountService.Transfer(sender.Id, recipient.Id, amount);
+    var transfer = _accountService.Transfer(sender.Id, recipient.Id, amount);
 
     _unitOfWork.Verify(u => u.SaveChanges(), Times.Once());
 
     Assert.Equal(0, sender.Money.Amount);
-    Assert.Equal(amount, recipient.Money.Amount);
+    Assert.Equal(transfer.RecipientAmount, recipient.Money.Amount);
   }
 
   [Fact]
@@ -73,11 +74,11 @@ public class AccountServiceTests
   }
 
   [Theory]
-  [InlineData(CurrencyCode.SLP, CurrencyCode.PIZ, 10, 25, 2.5)]
-  [InlineData(CurrencyCode.PIZ, CurrencyCode.SLP, 10, 12, 1.2)]
-  [InlineData(CurrencyCode.PIZ, CurrencyCode.SLP, 100, 50, 0.5)]
+  [InlineData(CurrencyCode.SLP, CurrencyCode.PIZ, 10, 25 - 25 * 0.02, 2.5)]
+  [InlineData(CurrencyCode.PIZ, CurrencyCode.SLP, 10, 12 - 12 * 0.02, 1.2)]
+  [InlineData(CurrencyCode.PIZ, CurrencyCode.SLP, 100, 50 - 50 * 0.02, 0.5)]
   public void Transfer_DifferentCurrency_CorrectConvert(CurrencyCode currFrom, CurrencyCode currTo,
-    decimal amountFrom, decimal amountTo, double rate)
+    decimal amountFrom, decimal amountTo, decimal rate)
   {
     var (sender, recipient) = CreateAccountPairBypassService(currFrom, currTo, rate);
 
@@ -99,17 +100,17 @@ public class AccountServiceTests
   [InlineData(CurrencyCode.PIZ, CurrencyCode.SLP, 100, 30, 0.3)]
   public void Transfer_DifferentCurrency_CorrectReversedConvert(CurrencyCode senderCurrencyCode,
     CurrencyCode recipientCurrencyCode, decimal senderAmount,
-    decimal recipientAmount, double rate)
+    decimal recipientAmount, decimal rate)
   {
     var (sender, recipient) = CreateAccountPairBypassService(senderCurrencyCode, recipientCurrencyCode, rate);
     sender.Credit(senderAmount);
 
     _ratesProvider.Setup(r => r.GetRate(recipientCurrencyCode, senderCurrencyCode)).Returns(1 / rate);
-    _accountService.Transfer(sender.Id, recipient.Id, senderAmount);
-    _accountService.Transfer(recipient.Id, sender.Id, recipientAmount);
+    var transferTo = _accountService.Transfer(sender.Id, recipient.Id, senderAmount);
+    var transferFrom = _accountService.Transfer(recipient.Id, sender.Id, recipientAmount - transferTo.Commission);
     _unitOfWork.Verify(u => u.SaveChanges(), Times.Exactly(2));
 
-    Assert.Equal(senderAmount, sender.Money.Amount);
+    Assert.Equal(transferFrom.RecipientAmount, sender.Money.Amount);
     Assert.Equal(0, recipient.Money.Amount);
   }
 }
