@@ -1,4 +1,4 @@
-namespace CBS.Core.Clients.Domain;
+namespace CBS.Core.Domain.Clients;
 
 public class Client(Guid id, ClientInfo clientInfo, DateTime createdDate)
 {

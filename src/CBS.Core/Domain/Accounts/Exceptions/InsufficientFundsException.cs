@@ -1,4 +1,4 @@
-namespace CBS.Core.Accounts.Domain.Exceptions;
+namespace CBS.Core.Domain.Accounts.Exceptions;
 
 public sealed class InsufficientFundsException(Guid accountId, decimal balance) : Exception($"Account {accountId}: insufficient funds. Balance: {balance}")
 {

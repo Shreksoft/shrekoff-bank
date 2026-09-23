@@ -1,6 +1,6 @@
 ﻿using CBS.Api.Controllers.Clients.Dto;
 using CBS.Application.Clients;
-using CBS.Core.Clients.Domain;
+using CBS.Core.Domain.Clients;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CBS.Api.Controllers.Clients;

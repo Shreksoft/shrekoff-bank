@@ -1,7 +1,7 @@
-using CBS.Core.Accounts.Domain.Currencies;
-using CBS.Core.Accounts.Domain.Exceptions;
+using CBS.Core.Domain.Accounts.Exceptions;
+using CBS.Core.Domain.Shared.Currencies;
 
-namespace CBS.Core.Accounts.Domain;
+namespace CBS.Core.Domain.Accounts;
 
 public class Account
 {

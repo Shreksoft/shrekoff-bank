@@ -1,5 +1,5 @@
 using CBS.Application.Clients;
-using CBS.Core.Clients.Domain;
+using CBS.Core.Domain.Clients;
 
 namespace CBS.Infrastructure.Data.Clients;
 

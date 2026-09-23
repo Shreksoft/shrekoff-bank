@@ -1,6 +1,6 @@
-using CBS.Core.Accounts.Domain.Currencies;
+using CBS.Core.Domain.Shared.Currencies;
 
-namespace CBS.Core.Accounts.Domain.Exceptions;
+namespace CBS.Core.Domain.Accounts.Exceptions;
 
 public sealed class CurrencyMismatchException(CurrencyCode currencyCode, CurrencyCode currencyCodeOther)
   : Exception($"Currency {currencyCode} isn't equal {currencyCodeOther}")

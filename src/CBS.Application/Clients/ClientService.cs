@@ -1,4 +1,4 @@
-using CBS.Core.Clients.Domain;
+using CBS.Core.Domain.Clients;
 using ObjectNotFoundException = CBS.Application.Shared.ObjectNotFoundException;
 
 namespace CBS.Application.Clients;

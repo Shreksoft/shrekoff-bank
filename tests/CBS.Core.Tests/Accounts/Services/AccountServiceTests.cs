@@ -1,9 +1,9 @@
 using CBS.Application;
 using CBS.Application.Accounts;
 using CBS.Application.Clients;
-using CBS.Core.Accounts.Domain;
-using CBS.Core.Accounts.Domain.Currencies;
-using CBS.Core.Accounts.Domain.Exceptions;
+using CBS.Core.Domain.Accounts;
+using CBS.Core.Domain.Accounts.Exceptions;
+using CBS.Core.Domain.Shared.Currencies;
 using Moq;
 
 namespace CBS.Core.Tests.Accounts.Services;

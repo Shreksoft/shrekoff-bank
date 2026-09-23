@@ -1,4 +1,4 @@
-namespace CBS.Core.Accounts.Domain.Currencies;
+namespace CBS.Core.Domain.Shared.Currencies;
 
 public readonly record struct Currency(CurrencyCode Code)
 {

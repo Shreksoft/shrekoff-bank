@@ -1,5 +1,5 @@
-using CBS.Core.Accounts.Domain;
-using CBS.Core.Clients.Domain;
+using CBS.Core.Domain.Accounts;
+using CBS.Core.Domain.Clients;
 using CBS.Core.Domain.Transfers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;

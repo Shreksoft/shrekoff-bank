@@ -1,4 +1,4 @@
-namespace CBS.Core.Accounts.Domain.Exceptions;
+namespace CBS.Core.Domain.Accounts.Exceptions;
 
 public sealed class AccountBlockedException(Guid accountId) : Exception($"Account {accountId} is blocked")
 {

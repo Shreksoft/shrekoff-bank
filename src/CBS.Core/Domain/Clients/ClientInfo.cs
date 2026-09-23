@@ -1,6 +1,6 @@
-namespace CBS.Core.Clients.Domain;
+namespace CBS.Core.Domain.Clients;
 
-// record под копотом перегружает Equals, GetHashCode, ToString и операторы == != + деконструкция
+// record под капотом перегружает Equals, GetHashCode, ToString и операторы == != + деконструкция
 public readonly record struct ClientInfo
 {
   public FullName FullName { get; init; }

@@ -1,4 +1,4 @@
-﻿namespace CBS.Core.Clients.Domain;
+﻿namespace CBS.Core.Domain.Clients;
 
 /// <summary>
 /// Represents a client's full name as a value object.

@@ -1,5 +1,5 @@
 using CBS.Application.Accounts;
-using CBS.Core.Accounts.Domain.Currencies;
+using CBS.Core.Domain.Shared.Currencies;
 
 namespace CBS.Infrastructure.Data.Providers.Rates;
 

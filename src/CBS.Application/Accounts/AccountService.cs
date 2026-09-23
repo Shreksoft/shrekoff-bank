@@ -1,7 +1,7 @@
 using CBS.Application.Clients;
-using CBS.Core.Accounts.Domain;
-using CBS.Core.Accounts.Domain.Currencies;
 using CBS.Application.Shared;
+using CBS.Core.Domain.Accounts;
+using CBS.Core.Domain.Shared.Currencies;
 using CBS.Core.Domain.Transfers;
 
 namespace CBS.Application.Accounts;

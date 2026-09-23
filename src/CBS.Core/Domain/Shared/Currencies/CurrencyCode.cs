@@ -1,4 +1,4 @@
-namespace CBS.Core.Accounts.Domain.Currencies;
+namespace CBS.Core.Domain.Shared.Currencies;
 
 public enum CurrencyCode
 {

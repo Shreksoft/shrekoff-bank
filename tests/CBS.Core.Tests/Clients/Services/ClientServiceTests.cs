@@ -1,6 +1,6 @@
 using CBS.Application;
 using CBS.Application.Clients;
-using CBS.Core.Clients.Domain;
+using CBS.Core.Domain.Clients;
 using Moq;
 
 namespace CBS.Core.Tests.Clients.Services;

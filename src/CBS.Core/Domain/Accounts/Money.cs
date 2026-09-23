@@ -1,6 +1,6 @@
-using CBS.Core.Accounts.Domain.Currencies;
+using CBS.Core.Domain.Shared.Currencies;
 
-namespace CBS.Core.Accounts.Domain;
+namespace CBS.Core.Domain.Accounts;
 
 public readonly record struct Money(Currency Currency, decimal Amount)
 {
