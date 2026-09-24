@@ -7,8 +7,10 @@ public class Account
 {
     public Account(Guid clientId, Money money)
     {
-        if (!Currency.IsValid(money.Currency))
-            throw new ArgumentException("Invalid currency");
+        if (clientId == Guid.Empty)
+            throw new ArgumentException("ClientId is required", nameof(clientId));
+        if (money.Currency.IsDefault)
+            throw new ArgumentException("Currency is required", nameof(money));
 
         Id = Guid.NewGuid();
         ClientId = clientId;
@@ -26,25 +28,25 @@ public class Account
     public Money Money { get; private set; }
     public bool IsBlocked { get; private set; }
 
-    public void Debit(decimal amount)
+    public void Debit(Money debitMoney)
     {
-        if (amount <= 0) throw new AmountIsNegativeException(Id, amount);
+        if (debitMoney.Amount <= 0) throw new AmountIsNegativeException(Id, debitMoney.Amount);
         if (IsBlocked) throw new AccountBlockedException(Id);
 
         var balance = Money.Amount;
-        if (amount > balance) throw new InsufficientFundsException(Id, balance);
+        var newBalance = Money.Subtract(debitMoney);
+        if (newBalance.Amount < 0)
+            throw new InsufficientFundsException(Id, balance);
 
-        var newAmount = Math.Round(balance - amount, Money.Currency.Scale);
-        Money = Money with { Amount = newAmount };
+        Money = newBalance;
     }
 
-    public void Credit(decimal amount)
+    public void Credit(Money creditMoney)
     {
-        if (amount <= 0) throw new AmountIsNegativeException(Id, amount);
+        if (creditMoney.Amount <= 0) throw new AmountIsNegativeException(Id, creditMoney.Amount);
         if (IsBlocked) throw new AccountBlockedException(Id);
 
-        var newAmount = Math.Round(Money.Amount + amount, Money.Currency.Scale);
-        Money = Money with { Amount = newAmount };
+        Money = Money.Add(creditMoney);
     }
 
     public void Block()

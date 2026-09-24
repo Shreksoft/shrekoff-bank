@@ -20,8 +20,10 @@ public class AccountService(
 
         var money = new Money(new Currency(currencyCode), 0);
         var account = new Account(clientId, money);
+
         accountRepository.Add(account);
         unitOfWork.SaveChanges();
+
         return account;
     }
 
@@ -30,13 +32,15 @@ public class AccountService(
         var sender = GetByIdOrThrow(senderAccountId);
         var recipient = GetByIdOrThrow(recipientAccountId);
 
-        var rate = convertRateProvider.GetRate(sender.Money.Currency.Code, recipient.Money.Currency.Code);
-        var senderInfo = new TransferSide(sender.Id, sender.ClientId, sender.Money.Currency);
-        var recipientInfo = new TransferSide(recipient.Id, recipient.ClientId, recipient.Money.Currency);
-        var transfer = new Transfer(senderInfo, recipientInfo, amount, rate);
+        var transferMoney = new Money(sender.Money.Currency, amount);
 
-        sender.Debit(transfer.SenderAmount);
-        recipient.Credit(transfer.RecipientAmount);
+        var rate = convertRateProvider.GetRate(sender.Money.Currency.Code, recipient.Money.Currency.Code);
+        var senderInfo = new TransferSide(sender.Id, sender.ClientId);
+        var recipientInfo = new TransferSide(recipient.Id, recipient.ClientId);
+        var transfer = new Transfer(senderInfo, recipientInfo, transferMoney, recipient.Money.Currency.Code, rate);
+
+        sender.Debit(transfer.SenderMoney);
+        recipient.Credit(transfer.RecipientMoney);
 
         transferRepository.Add(transfer);
         unitOfWork.SaveChanges();
@@ -53,8 +57,12 @@ public class AccountService(
     public decimal Deposit(Guid accountId, decimal amount)
     {
         var account = GetByIdOrThrow(accountId);
-        account.Credit(amount);
+        var depositMoney = new Money(account.Money.Currency, amount);
+
+        account.Credit(depositMoney);
+
         unitOfWork.SaveChanges();
+
         return account.Money.Amount;
     }
 }

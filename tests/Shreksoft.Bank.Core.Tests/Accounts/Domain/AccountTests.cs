@@ -23,8 +23,9 @@ public class AccountTests
         const byte amount = 100;
         var acc = CreateAccount();
 
-        acc.Credit(amount);
-        acc.Debit(amount);
+        var money = new Money(acc.Money.Currency, amount);
+        acc.Credit(money);
+        acc.Debit(money);
 
         Assert.Equal(0, acc.Money.Amount);
     }
@@ -34,7 +35,8 @@ public class AccountTests
     {
         var acc = CreateAccount();
 
-        Assert.Throws<InsufficientFundsException>(() => acc.Debit(100));
+        var money = new Money(acc.Money.Currency, 100);
+        Assert.Throws<InsufficientFundsException>(() => acc.Debit(money));
     }
 
     [Fact]
@@ -43,7 +45,8 @@ public class AccountTests
         var acc = CreateAccount();
         acc.Block();
 
-        Assert.Throws<AccountBlockedException>(() => acc.Debit(100));
+        var money = new Money(acc.Money.Currency, 100);
+        Assert.Throws<AccountBlockedException>(() => acc.Debit(money));
     }
 
     [Fact]
@@ -52,7 +55,8 @@ public class AccountTests
         var acc = CreateAccount();
         const short amount = -1;
 
-        Assert.Throws<AmountIsNegativeException>(() => acc.Debit(amount));
+        var money = new Money(acc.Money.Currency, amount);
+        Assert.Throws<AmountIsNegativeException>(() => acc.Debit(money));
     }
 
     [Fact]
@@ -63,7 +67,8 @@ public class AccountTests
 
         acc.Block();
 
-        Assert.Throws<AccountBlockedException>(() => acc.Credit(100));
+        var money = new Money(acc.Money.Currency, 100);
+        Assert.Throws<AccountBlockedException>(() => acc.Credit(money));
     }
 
     [Fact]
@@ -72,20 +77,23 @@ public class AccountTests
         var acc = CreateAccount();
         const short amount = -1;
 
-        Assert.Throws<AmountIsNegativeException>(() => acc.Credit(amount));
+        var money = new Money(acc.Money.Currency, amount);
+        Assert.Throws<AmountIsNegativeException>(() => acc.Credit(money));
     }
 
     [Fact]
     public async Task Debit_WhenCalledConcurrentlyTotalExceedsBalance_BalanceIsPositive()
     {
         var account = CreateAccount();
-        account.Credit(100);
+        var money = new Money(account.Money.Currency, 100);
+        account.Credit(money);
         const byte count = 10;
         const short debitAmount = 20;
+        var debitMoney = new Money(account.Money.Currency, debitAmount);
         var tasks = new Task[count];
 
         for (var i = 0; i < count; i++)
-            tasks[i] = Task.Run(() => account.Debit(debitAmount));
+            tasks[i] = Task.Run(() => account.Debit(debitMoney));
 
         await Assert.ThrowsAsync<InsufficientFundsException>(async () => await Task.WhenAll(tasks));
         Assert.True(account.Money.Amount >= 0);
@@ -95,13 +103,15 @@ public class AccountTests
     public async Task Debit_WhenCalledConcurrentlyTotalNotExceedsBalance_CorrectBalance()
     {
         var account = CreateAccount();
-        account.Credit(100);
+        var money = new Money(account.Money.Currency, 100);
+        account.Credit(money);
         const byte count = 4;
         const byte debitAmount = 20;
+        var debitMoney = new Money(account.Money.Currency, debitAmount);
         var tasks = new Task[count];
 
         for (var i = 0; i < count; i++)
-            tasks[i] = Task.Run(() => account.Debit(debitAmount));
+            tasks[i] = Task.Run(() => account.Debit(debitMoney));
 
         await Task.WhenAll(tasks);
 
