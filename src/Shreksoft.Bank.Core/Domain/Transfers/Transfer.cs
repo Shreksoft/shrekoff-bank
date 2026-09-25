@@ -1,3 +1,6 @@
+using Shreksoft.Bank.Core.Domain.Accounts;
+using Shreksoft.Bank.Core.Domain.Shared.Currencies;
+
 namespace Shreksoft.Bank.Core.Domain.Transfers;
 
 public class Transfer
@@ -6,10 +9,10 @@ public class Transfer
 
     public TransferSide SenderSide { get; }
     public TransferSide RecipientSide { get; }
-    public decimal SenderAmount { get; private set; }
-    public decimal RecipientAmount { get; private set; }
+    public Money SenderMoney { get; private set; }
+    public Money RecipientMoney { get; private set; }
     public Guid Id { get; } = Guid.NewGuid();
-    public decimal Commission { get; private set; }
+    public Money CommissionMoney { get; private set; }
     public decimal Rate { get; private set; }
 
     // for EF
@@ -17,7 +20,7 @@ public class Transfer
     {
     }
 
-    public Transfer(TransferSide senderSide, TransferSide recipientSide, decimal amount, decimal rate)
+    public Transfer(TransferSide senderSide, TransferSide recipientSide, Money transferMoney, CurrencyCode recipientCurrencyCode, decimal rate)
     {
         if (senderSide.AccountId == recipientSide.AccountId)
             throw new InvalidOperationException("Transfers between the same account are prohibited");
@@ -25,21 +28,21 @@ public class Transfer
         if (rate <= 0)
             throw new ArgumentException("Rate is less than 0 or equals 0");
 
-        if (amount <= 0)
+        if (transferMoney.Amount <= 0)
             throw new ArgumentException("Amount for send is less than 0 or equals 0");
 
-        SenderAmount = amount;
-
-        var recipientAmount = rate * amount;
-        Commission = senderSide.ClientId == recipientSide.ClientId
-            ? 0
-            : Math.Round(recipientAmount * CommissionRatio, recipientSide.Currency.Scale);
-
+        SenderMoney = transferMoney;
         SenderSide = senderSide;
         RecipientSide = recipientSide;
 
-        RecipientAmount = Math.Round(recipientAmount - Commission,
-            recipientSide.Currency.Scale);
+        var recipientCurrency = new Currency(recipientCurrencyCode);
+        var recipientMoney = Money.Round(recipientCurrency, rate * transferMoney.Amount);
+
+        CommissionMoney = senderSide.ClientId == recipientSide.ClientId
+            ? new Money(recipientCurrency, 0)
+            : Money.Round(recipientCurrency, recipientMoney.Amount * CommissionRatio);
+
+        RecipientMoney = recipientMoney.Subtract(CommissionMoney);
         Rate = rate;
     }
 }

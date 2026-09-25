@@ -3,6 +3,7 @@ using Shreksoft.Bank.Core.Domain.Clients;
 using Shreksoft.Bank.Core.Domain.Transfers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Shreksoft.Bank.Infrastructure.Data.Accounts;
 
 namespace Shreksoft.Bank.Infrastructure.Data;
 
@@ -22,15 +23,7 @@ public class BankDbContext(DbContextOptions<BankDbContext> options) : DbContext(
                 .WithMany()
                 .HasForeignKey(a => a.ClientId)
                 .OnDelete(DeleteBehavior.Restrict);
-            account.ComplexProperty(a => a.Money, money =>
-            {
-                money.Property(m => m.Amount);
-                money.ComplexProperty(m => m.Currency, currency =>
-                {
-                    currency.Property(c => c.Scale);
-                    currency.Property(c => c.Code).HasConversion<string>();
-                });
-            });
+            account.ComplexProperty(a => a.Money, MoneyConfiguration.Configure);
         });
 
         modelBuilder.Entity<Client>(client =>

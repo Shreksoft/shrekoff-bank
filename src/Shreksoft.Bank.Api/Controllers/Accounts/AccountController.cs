@@ -25,7 +25,7 @@ public class AccountController : BaseApiController
     public IActionResult Transfer(TransferDto dto, [FromServices] AccountService accountService)
     {
         var (senderAccountId, recipientAccountId, amount) = dto;
-        var guid = accountService.Transfer(senderAccountId, recipientAccountId, amount);
+        var guid = accountService.Transfer(senderAccountId, recipientAccountId, amount).Id;
         return Ok(new { guid });
     }
 

@@ -43,14 +43,15 @@ public class AccountServiceTests
     {
         const int amount = 100;
         var (sender, recipient) = CreateAccountPairBypassService();
-        sender.Credit(amount);
+        var creditMoney = new Money(sender.Money.Currency, amount);
+        sender.Credit(creditMoney);
 
         var transfer = _accountService.Transfer(sender.Id, recipient.Id, amount);
 
         _unitOfWork.Verify(u => u.SaveChanges(), Times.Once());
 
         Assert.Equal(0, sender.Money.Amount);
-        Assert.Equal(transfer.RecipientAmount, recipient.Money.Amount);
+        Assert.Equal(transfer.RecipientMoney.Amount, recipient.Money.Amount);
     }
 
     [Fact]
@@ -58,7 +59,9 @@ public class AccountServiceTests
     {
         var (sender, recipient) = CreateAccountPairBypassService();
         const int amount = 100;
-        sender.Credit(amount);
+
+        var money = new Money(sender.Money.Currency, amount);
+        sender.Credit(money);
         recipient.Block();
 
         Assert.Throws<AccountBlockedException>(() => _accountService.Transfer(sender.Id, recipient.Id, amount));
@@ -83,7 +86,8 @@ public class AccountServiceTests
     {
         var (sender, recipient) = CreateAccountPairBypassService(currFrom, currTo, rate);
 
-        sender.Credit(amountFrom);
+        var creditMoney = new Money(sender.Money.Currency, amountFrom);
+        sender.Credit(creditMoney);
 
         var ex = Record.Exception(() => _accountService.Transfer(sender.Id, recipient.Id, amountFrom));
 
@@ -104,14 +108,15 @@ public class AccountServiceTests
         decimal recipientAmount, decimal rate)
     {
         var (sender, recipient) = CreateAccountPairBypassService(senderCurrencyCode, recipientCurrencyCode, rate);
-        sender.Credit(senderAmount);
+        var creditMoney = new Money(sender.Money.Currency, senderAmount);
+        sender.Credit(creditMoney);
 
         _ratesProvider.Setup(r => r.GetRate(recipientCurrencyCode, senderCurrencyCode)).Returns(1 / rate);
         var transferTo = _accountService.Transfer(sender.Id, recipient.Id, senderAmount);
-        var transferFrom = _accountService.Transfer(recipient.Id, sender.Id, recipientAmount - transferTo.Commission);
+        var transferFrom = _accountService.Transfer(recipient.Id, sender.Id, recipientAmount - transferTo.CommissionMoney.Amount);
         _unitOfWork.Verify(u => u.SaveChanges(), Times.Exactly(2));
 
-        Assert.Equal(transferFrom.RecipientAmount, sender.Money.Amount);
+        Assert.Equal(transferFrom.RecipientMoney.Amount, sender.Money.Amount);
         Assert.Equal(0, recipient.Money.Amount);
     }
 }

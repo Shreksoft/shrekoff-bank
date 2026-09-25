@@ -1,20 +1,30 @@
+using Shreksoft.Bank.Core.Domain.Accounts.Exceptions;
+
 namespace Shreksoft.Bank.Core.Domain.Shared.Currencies;
 
-public readonly record struct Currency(CurrencyCode Code)
+public readonly record struct Currency
 {
-    public byte Scale { get; } = GetScale(Code);
+    public CurrencyCode Code { get; private init; }
 
-    private static byte GetScale(CurrencyCode code)
+    public bool IsDefault => Code == default;
+
+    public Currency(CurrencyCode code)
     {
-        return code switch
-        {
-            CurrencyCode.SLP => 2,
-            _ => 5
-        };
+        if (!Enum.IsDefined(code))
+            throw new ArgumentOutOfRangeException(nameof(code));
+
+        Code = code;
     }
 
-    public static bool IsValid(Currency currency)
+    public byte Scale => Code switch
     {
-        return Enum.IsDefined(currency.Code) && currency.Scale == GetScale(currency.Code);
+        CurrencyCode.SLP => 2,
+        _ => 5
+    };
+
+    public void EnsureSameAs(Currency other)
+    {
+        if (Code != other.Code)
+            throw new CurrencyMismatchException(Code, other.Code);
     }
 }

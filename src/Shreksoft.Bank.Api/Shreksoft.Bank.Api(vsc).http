@@ -29,7 +29,7 @@ Content-Type: application/json
 
 {
     "clientId": "{{clientId}}",
-    "currency": 1
+    "currencyCode": 1
 }
 
 ###
