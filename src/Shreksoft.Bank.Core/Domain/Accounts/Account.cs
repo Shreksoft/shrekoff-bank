@@ -43,8 +43,10 @@ public class Account
 
     public void Credit(Money creditMoney)
     {
-        if (creditMoney.Amount <= 0) throw new AmountIsNegativeException(Id, creditMoney.Amount);
-        if (IsBlocked) throw new AccountBlockedException(Id);
+        if (creditMoney.Amount <= 0)
+            throw new AmountIsNegativeException(Id, creditMoney.Amount);
+        if (IsBlocked)
+            throw new AccountBlockedException(Id);
 
         Money = Money.Add(creditMoney);
     }

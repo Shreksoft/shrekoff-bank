@@ -36,11 +36,11 @@ public class Transfer
         RecipientSide = recipientSide;
 
         var recipientCurrency = new Currency(recipientCurrencyCode);
-        var recipientMoney = new Money(recipientCurrency, rate * transferMoney.Amount);
+        var recipientMoney = Money.Round(recipientCurrency, rate * transferMoney.Amount);
 
         CommissionMoney = senderSide.ClientId == recipientSide.ClientId
             ? new Money(recipientCurrency, 0)
-            : new Money(recipientCurrency, recipientMoney.Amount * CommissionRatio);
+            : Money.Round(recipientCurrency, recipientMoney.Amount * CommissionRatio);
 
         RecipientMoney = recipientMoney.Subtract(CommissionMoney);
         Rate = rate;
