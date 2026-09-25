@@ -42,26 +42,36 @@ namespace Shreksoft.Bank.Infrastructure.Data.Migrations
                 table: "Transfers",
                 newName: "RecipientMoney_Amount");
 
-            migrationBuilder.RenameColumn(
-                name: "Commission",
-                table: "Transfers",
-                newName: "CommissionMoney_Currency_Code");
-
             migrationBuilder.AddColumn<decimal>(
                 name: "CommissionMoney_Amount",
                 table: "Transfers",
                 type: "TEXT",
                 nullable: false,
                 defaultValue: 0m);
+
+            migrationBuilder.AddColumn<string>(
+                name: "CommissionMoney_Currency_Code",
+                table: "Transfers",
+                nullable: false,
+                defaultValue: "SLP");
+
+            migrationBuilder.Sql(
+                """
+                UPDATE "Transfers"
+                SET "CommissionMoney_Amount" = "Commission",
+                    "CommissionMoney_Currency_Code" = "RecipientMoney_Currency_Code";
+                """
+            );
+
+            migrationBuilder.DropColumn(
+                name: "Commission",
+                table: "Transfer"
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "CommissionMoney_Amount",
-                table: "Transfers");
-
             migrationBuilder.RenameColumn(
                 name: "SenderMoney_Currency_Code",
                 table: "Transfers",
@@ -82,10 +92,28 @@ namespace Shreksoft.Bank.Infrastructure.Data.Migrations
                 table: "Transfers",
                 newName: "RecipientAmount");
 
-            migrationBuilder.RenameColumn(
-                name: "CommissionMoney_Currency_Code",
+            migrationBuilder.AddColumn<decimal>(
+                name: "Commission",
                 table: "Transfers",
-                newName: "Commission");
+                type: "TEXT",
+                nullable: false,
+                defaultValue: 0m
+            );
+
+            migrationBuilder.Sql(
+                """
+                UPDATE "Transfers"
+                SET "Commission" = "CommissionMoney_Amount"
+                """
+            );
+
+            migrationBuilder.DropColumn(
+                name: "CommissionMoney_Amount",
+                table: "Transfers");
+
+            migrationBuilder.DropColumn(
+                name: "CommissionMoney_Currency_Code",
+                table: "Transfers");
 
             migrationBuilder.AddColumn<byte>(
                 name: "RecipientSide_Currency_Scale",
@@ -107,6 +135,16 @@ namespace Shreksoft.Bank.Infrastructure.Data.Migrations
                 type: "INTEGER",
                 nullable: false,
                 defaultValue: (byte)0);
+
+            migrationBuilder.Sql(
+                """
+                UPDATE "Transfers"
+                SET "SenderSide_Currency_Scale" = CASE "SenderSide_Currency_Code" WHEN 'SLP' THEN 2 ELSE 5 END,
+                "RecipientSide_Currency_Scale" = CASE "RecipientSide_Currency_Code" WHEN 'SLP' THEN 2 ELSE 5 END;
+                UPDATE "Accounts"
+                SET "Money_Currency_Scale" = CASE "Money_Currency_Code" WHEN 'SLP' THEN 2 ELSE 5 END;
+                """
+            );
         }
     }
 }

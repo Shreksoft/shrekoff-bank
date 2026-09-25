@@ -33,7 +33,7 @@ Content-Type: application/json
 
 {
     "clientId": "{{clientId}}",
-    "currencyCode": 1
+    "currencyCode": 2
 }
 
 > {%
@@ -53,8 +53,8 @@ POST {{Api_HostAddress}}/api/Account/Transfer
 Content-Type: application/json
 
 {
-    "senderAccId": "71F23965-6ECD-4CB5-A612-48E95013E336",
-    "recipientAccId": "536C34BE-AC17-4370-B735-7771B43CC0CC",
+    "senderAccId": "1757C04A-73FD-4169-8BFA-565BEB97BA82",
+    "recipientAccId": "B9B669DD-24F4-48E0-AC93-1C4C6287F396",
     "amount": 100
 }
 
@@ -65,5 +65,5 @@ Content-Type: application/json
 
 {
     "accountId": "{{accountId}}",
-    "amount": 300
+    "amount": 300.11122
 }
