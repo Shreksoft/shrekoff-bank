@@ -65,7 +65,7 @@ namespace Shreksoft.Bank.Infrastructure.Data.Migrations
 
             migrationBuilder.DropColumn(
                 name: "Commission",
-                table: "Transfer"
+                table: "Transfers"
             );
         }
 
