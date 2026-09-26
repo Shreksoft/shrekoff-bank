@@ -1,0 +1,17 @@
+﻿services:
+    shrekoff-bank-api:
+        container_name: "shrekoff-bank"
+        image: "shrekoff-bank:1.0.0"
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "8080:8080"
+        environment:
+            - ASPNETCORE_URLS=http://0.0.0.0:8080
+            - ConnectionStrings__DefaultConnection=Data Source=/app/data/bank.db
+        volumes:
+            - bank-data:/app/data
+
+volumes:
+    bank-data:
