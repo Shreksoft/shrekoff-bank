@@ -1,17 +1,37 @@
-﻿services:
+﻿name: "shrekoff-bank"
+services:
     shrekoff-bank-api:
-        container_name: "shrekoff-bank"
+        container_name: "shrekoff-bank-api"
         image: "shrekoff-bank:1.0.0"
         build:
             context: .
             dockerfile: Dockerfile
+        depends_on:
+            database:
+                condition: service_healthy
         ports:
             - "8080:8080"
         environment:
-            - ASPNETCORE_URLS=http://0.0.0.0:8080
-            - ConnectionStrings__DefaultConnection=Data Source=/app/data/bank.db
+            ASPNETCORE_URLS: "http://0.0.0.0:8080"
+            ConnectionStrings__DefaultConnection: "Host=database;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
+
+    database:
+        container_name: "shrekoff-bank-db"
+        image: "postgres:18"
+        restart: always
+        ports:
+            - "127.0.0.1:5432:5432"
+        environment:
+            POSTGRES_DB: ${POSTGRES_DB:-shrekoff-bank-db}
+            POSTGRES_USER: ${POSTGRES_USER:-postgres}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
         volumes:
-            - bank-data:/app/data
+            -   pg-data:/var/lib/postgresql
 
 volumes:
-    bank-data:
+    pg-data:

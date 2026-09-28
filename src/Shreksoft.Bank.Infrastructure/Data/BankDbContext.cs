@@ -57,7 +57,7 @@ public class BankDbContextFactory : IDesignTimeDbContextFactory<BankDbContext>
     public BankDbContext CreateDbContext(string[] args)
     {
         var options = new DbContextOptionsBuilder<BankDbContext>()
-            .UseSqlite("Data Source=fake.db")
+            .UseNpgsql("FakeStringForMigration")
             .Options;
 
         return new BankDbContext(options);

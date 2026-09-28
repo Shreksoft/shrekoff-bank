@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Shreksoft.Bank.Infrastructure.Data;
 
 #nullable disable
@@ -16,26 +17,30 @@ namespace Shreksoft.Bank.Infrastructure.Data.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "10.0.11");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "10.0.11")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Shreksoft.Bank.Core.Domain.Accounts.Account", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ClientId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsBlocked")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
 
                     b.ComplexProperty(typeof(Dictionary<string, object>), "Money", "Shreksoft.Bank.Core.Domain.Accounts.Account.Money#Money", b1 =>
                         {
                             b1.IsRequired();
 
                             b1.Property<decimal>("Amount")
-                                .HasColumnType("TEXT");
+                                .HasColumnType("numeric");
 
                             b1.ComplexProperty(typeof(Dictionary<string, object>), "Currency", "Shreksoft.Bank.Core.Domain.Accounts.Account.Money#Money.Currency#Currency", b2 =>
                                 {
@@ -43,7 +48,7 @@ namespace Shreksoft.Bank.Infrastructure.Data.Migrations
 
                                     b2.Property<string>("Code")
                                         .IsRequired()
-                                        .HasColumnType("TEXT");
+                                        .HasColumnType("text");
                                 });
                         });
 
@@ -58,27 +63,27 @@ namespace Shreksoft.Bank.Infrastructure.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.ComplexProperty(typeof(Dictionary<string, object>), "Info", "Shreksoft.Bank.Core.Domain.Clients.Client.Info#ClientInfo", b1 =>
                         {
                             b1.IsRequired();
 
                             b1.Property<string>("Email")
-                                .HasColumnType("TEXT");
+                                .HasColumnType("text");
 
                             b1.Property<string>("PhoneNumber")
-                                .HasColumnType("TEXT");
+                                .HasColumnType("text");
 
                             b1.ComplexProperty(typeof(Dictionary<string, object>), "BirthDate", "Shreksoft.Bank.Core.Domain.Clients.Client.Info#ClientInfo.BirthDate#BirthDate", b2 =>
                                 {
                                     b2.IsRequired();
 
                                     b2.Property<DateOnly>("Date")
-                                        .HasColumnType("TEXT");
+                                        .HasColumnType("date");
                                 });
 
                             b1.ComplexProperty(typeof(Dictionary<string, object>), "FullName", "Shreksoft.Bank.Core.Domain.Clients.Client.Info#ClientInfo.FullName#FullName", b2 =>
@@ -87,14 +92,14 @@ namespace Shreksoft.Bank.Infrastructure.Data.Migrations
 
                                     b2.Property<string>("FirstName")
                                         .IsRequired()
-                                        .HasColumnType("TEXT");
+                                        .HasColumnType("text");
 
                                     b2.Property<string>("LastName")
                                         .IsRequired()
-                                        .HasColumnType("TEXT");
+                                        .HasColumnType("text");
 
                                     b2.Property<string>("MiddleName")
-                                        .HasColumnType("TEXT");
+                                        .HasColumnType("text");
                                 });
                         });
 
@@ -107,17 +112,17 @@ namespace Shreksoft.Bank.Infrastructure.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("Rate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("numeric");
 
                     b.ComplexProperty(typeof(Dictionary<string, object>), "CommissionMoney", "Shreksoft.Bank.Core.Domain.Transfers.Transfer.CommissionMoney#Money", b1 =>
                         {
                             b1.IsRequired();
 
                             b1.Property<decimal>("Amount")
-                                .HasColumnType("TEXT");
+                                .HasColumnType("numeric");
 
                             b1.ComplexProperty(typeof(Dictionary<string, object>), "Currency", "Shreksoft.Bank.Core.Domain.Transfers.Transfer.CommissionMoney#Money.Currency#Currency", b2 =>
                                 {
@@ -125,7 +130,7 @@ namespace Shreksoft.Bank.Infrastructure.Data.Migrations
 
                                     b2.Property<string>("Code")
                                         .IsRequired()
-                                        .HasColumnType("TEXT");
+                                        .HasColumnType("text");
                                 });
                         });
 
@@ -134,7 +139,7 @@ namespace Shreksoft.Bank.Infrastructure.Data.Migrations
                             b1.IsRequired();
 
                             b1.Property<decimal>("Amount")
-                                .HasColumnType("TEXT");
+                                .HasColumnType("numeric");
 
                             b1.ComplexProperty(typeof(Dictionary<string, object>), "Currency", "Shreksoft.Bank.Core.Domain.Transfers.Transfer.RecipientMoney#Money.Currency#Currency", b2 =>
                                 {
@@ -142,7 +147,7 @@ namespace Shreksoft.Bank.Infrastructure.Data.Migrations
 
                                     b2.Property<string>("Code")
                                         .IsRequired()
-                                        .HasColumnType("TEXT");
+                                        .HasColumnType("text");
                                 });
                         });
 
@@ -151,10 +156,10 @@ namespace Shreksoft.Bank.Infrastructure.Data.Migrations
                             b1.IsRequired();
 
                             b1.Property<Guid>("AccountId")
-                                .HasColumnType("TEXT");
+                                .HasColumnType("uuid");
 
                             b1.Property<Guid>("ClientId")
-                                .HasColumnType("TEXT");
+                                .HasColumnType("uuid");
                         });
 
                     b.ComplexProperty(typeof(Dictionary<string, object>), "SenderMoney", "Shreksoft.Bank.Core.Domain.Transfers.Transfer.SenderMoney#Money", b1 =>
@@ -162,7 +167,7 @@ namespace Shreksoft.Bank.Infrastructure.Data.Migrations
                             b1.IsRequired();
 
                             b1.Property<decimal>("Amount")
-                                .HasColumnType("TEXT");
+                                .HasColumnType("numeric");
 
                             b1.ComplexProperty(typeof(Dictionary<string, object>), "Currency", "Shreksoft.Bank.Core.Domain.Transfers.Transfer.SenderMoney#Money.Currency#Currency", b2 =>
                                 {
@@ -170,7 +175,7 @@ namespace Shreksoft.Bank.Infrastructure.Data.Migrations
 
                                     b2.Property<string>("Code")
                                         .IsRequired()
-                                        .HasColumnType("TEXT");
+                                        .HasColumnType("text");
                                 });
                         });
 
@@ -179,10 +184,10 @@ namespace Shreksoft.Bank.Infrastructure.Data.Migrations
                             b1.IsRequired();
 
                             b1.Property<Guid>("AccountId")
-                                .HasColumnType("TEXT");
+                                .HasColumnType("uuid");
 
                             b1.Property<Guid>("ClientId")
-                                .HasColumnType("TEXT");
+                                .HasColumnType("uuid");
                         });
 
                     b.HasKey("Id");
