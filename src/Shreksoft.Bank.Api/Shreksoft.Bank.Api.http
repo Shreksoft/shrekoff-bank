@@ -1,4 +1,4 @@
-@Api_HostAddress = http://localhost:5294
+@Api_HostAddress = http://localhost:8080
 
 ###
 # @name CreateClient
@@ -53,9 +53,9 @@ POST {{Api_HostAddress}}/api/Account/Transfer
 Content-Type: application/json
 
 {
-    "senderAccId": "1757C04A-73FD-4169-8BFA-565BEB97BA82",
-    "recipientAccId": "B9B669DD-24F4-48E0-AC93-1C4C6287F396",
-    "amount": 100
+    "senderAccId": "f0cd28e2-7ffd-4b0f-81e3-d94accce566d",
+    "recipientAccId": "c0b139e4-d53a-4410-a5c0-235f84c17b83",
+    "amount": 22
 }
 
 

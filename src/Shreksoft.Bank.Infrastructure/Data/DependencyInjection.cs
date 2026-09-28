@@ -22,7 +22,7 @@ public static class DependencyInjection
         services.AddScoped<IConvertRateProvider, InMemoryConvertRateProvider>();
 
         services.AddDbContext<BankDbContext>(options => options
-            .UseSqlite(config.GetConnectionString("DefaultConnection")));
+            .UseNpgsql(config.GetConnectionString("DefaultConnection")));
 
         return services;
     }
