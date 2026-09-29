@@ -4,9 +4,14 @@
 
 - C#, .NET 10 (`net10.0`), xUnit tests, Moq
 - ASP.NET Core Web API host (`Shreksoft.Bank.Api`)
-- SQLite via EF Core 10 (`Microsoft.EntityFrameworkCore.Sqlite` + `.Design` in Infrastructure)
-- Migrations applied automatically at startup (`Database.MigrateAsync` in `Program.cs`) or via EF CLI
+- PostgreSQL via EF Core 10 (`Npgsql.EntityFrameworkCore.PostgreSQL` + EF Core `.Design` in Infrastructure)
+- Migrations applied automatically at startup (`Database.MigrateAsync` in `Program.cs`) or via EF CLI; the schema is a
+  single consolidated Postgres migration (`InitialCreate`)
 - Rate provider is in-memory (`InMemoryConvertRateProvider`); real repositories are EF-based
+- Containerization: single root `Dockerfile` (multi-stage, `USER $APP_UID`, FDD publish, port 8080) + `compose.yaml`
+  with `shrekoff-bank-api` and `shrekoff-bank-db` (postgres:18, healthcheck, `pg-data` volume); DB credentials come
+  from `.env` (`POSTGRES_DB`/`POSTGRES_USER`/`POSTGRES_PASSWORD`)
+- CI: `.github/workflows/dotnet.yaml` — build + test on push to `main`/`dev` and on PRs (tests are unit-level, no DB needed)
 - DI via `Microsoft.Extensions.DependencyInjection`: `AddData()` extension (Infrastructure) + `AddScoped` (Api/`Program.cs`); composition root is `Program.cs`
 - EditorConfig: indent 4 spaces for `*.cs`
 
@@ -22,12 +27,13 @@
   - `Clients/` — `ClientService`, `IClientRepository`
   - `IUnitOfWork`; `Shared/ObjectNotFoundException`
 - `src/Shreksoft.Bank.Infrastructure/Data/` — EF Core persistence:
-  - `BankDbContext` (+ design-time `BankDbContextFactory`), `UnitOfWork`, `DependencyInjection` (`AddData`)
+  - `BankDbContext` (+ design-time `BankDbContextFactory`, Postgres), `UnitOfWork`, `DependencyInjection` (`AddData`)
   - `Accounts/`, `Clients/`, `Transfers/` — EF implementations of application interfaces and entity configs
   - `Providers/Rates/InMemoryConvertRateProvider`
-  - `Migrations/` — EF Core migrations (`InitialCreate`, `CurrencyUpdate`, `TransferUpdate`)
+  - `Migrations/` — one Postgres migration (`20260928133925_InitialCreate`) + snapshot
 - `src/Shreksoft.Bank.Api/` — hosting:
-  - `Program.cs` (composition root): `AddData` + `AddScoped<AccountService/ClientService>`, `MigrateAsync` at startup
+  - `Program.cs` (composition root): `AddData` + `AddScoped<AccountService/ClientService>`, `MigrateAsync` at startup;
+    local run reads `appsettings.Development.json` (Postgres on `localhost:5432`, db `shrekoff-bank-db`); http profile = port 5294
   - `Controllers/` — `BaseApiController` (`[ApiController]`, `Route("api/[controller]")`), `Accounts/`, `Clients/` + `Dto/`
   - `Middlewares/ExceptionMiddleware` — maps domain exceptions to 400/404/500 JSON
 - `tests/Shreksoft.Bank.Core.Tests/` — xUnit + Moq:
@@ -39,8 +45,11 @@
 ```
 dotnet build
 dotnet test
+dotnet run --project src/Shreksoft.Bank.Api/Shreksoft.Bank.Api.csproj   # local dev, port 5294
 dotnet ef migrations add <Name>        # migration lands in Infrastructure/Data/Migrations
-dotnet ef database update
+dotnet ef database update              # applies migrations (needs Postgres on 5432)
+
+docker compose up -d                   # api (8080) + postgres (5432); use `podman compose` with Podman
 ```
 
 ## Notable conventions
