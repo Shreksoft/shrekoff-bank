@@ -1,7 +1,5 @@
 # Shrekoff Bank
 
----
-
 [![.NET Build and Test](https://github.com/Shreksoft/shrekoff-bank/actions/workflows/dotnet.yaml/badge.svg?branch=main)](https://github.com/Shreksoft/shrekoff-bank/actions/workflows/dotnet.yaml)
 
 ![banner](docs/banner.png)
@@ -9,8 +7,6 @@
 Banking system implemented in C#
 
 ## Stack
-
----
 
 - C#
 - PostgreSQL
@@ -20,8 +16,6 @@ Banking system implemented in C#
 - EF Core 10
 
 ## Getting Started
-
----
 
 ### Download repository
 
@@ -78,7 +72,5 @@ dotnet test
 
 ## Misc
 
----
-
 - More information about project (for not human) [here](AGENTS.md)
-- Some architectural decisions (in Russian) [here](src/Shreksoft.Bank.Core/Docs/adr.md)
+- Some architectural decisions (in Russian) [here](docs/adr.md)
