@@ -21,7 +21,7 @@ Banking system implemented in C#
 
 ```shell
 # ssh flow
-git clone git@github.com:Shreksoft/shrekoff-bank.git
+git clone git@github.com:Shreksoft/shrekoff-bank.git && cd shrekoff-bank
 ```
 
 ### Database migrations
@@ -34,12 +34,14 @@ You can run app through [docker](#docker-start) or [.NET](#net-start)
 
 #### Docker start
 
-I set default values (ports, db-user, db-password) for launch, if you want to change it, you can create `.env` file in root and set this key:value
-```
+Copy the example environment file and adjust values if needed (`POSTGRES_PASSWORD` is required):
+
+```shell
+cp .env.example .env
 # .env
-POSTGRES_DB=[your value]
-POSTGRES_USER=[your value]
-POSTGRES_PASSWORD=[your value]
+# POSTGRES_DB=[your value]
+# POSTGRES_USER=[your value]
+# POSTGRES_PASSWORD=[your value] <- important
 ```
 
 ```shell
@@ -60,7 +62,7 @@ docker compose up -d
 ```shell
 # application will start on port 5294
 dotnet restore
-dotnet build
+dotnet build --no-restore
 dotnet run --project src/Shreksoft.Bank.Api/Shreksoft.Bank.Api.csproj
 ```
 
