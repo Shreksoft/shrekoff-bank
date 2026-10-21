@@ -1,6 +1,6 @@
 # Shrekoff Bank
 
-[![.NET Build and Test](https://github.com/Shreksoft/shrekoff-bank/actions/workflows/dotnet.yaml/badge.svg?branch=main)](https://github.com/Shreksoft/shrekoff-bank/actions/workflows/dotnet.yaml)
+[![.NET Build and Test](https://github.com/Shreksoft/shrekoff-bank/actions/workflows/dotnet.yaml/badge.svg?branch=main)](https://github.com/Shreksoft/shrekoff-bank/actions/workflows/dotnet.yaml) [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Shreksoft/shrekoff-bank)
 
 ![banner](docs/banner.png)
 
