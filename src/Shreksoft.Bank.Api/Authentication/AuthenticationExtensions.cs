@@ -28,7 +28,17 @@ public static class AuthenticationExtensions
             default: throw new NotSupportedException("Unknown auth mode");
         }
 
-        services.AddAuthorization();
+        services.AddAuthorizationBuilder()
+            .AddPolicy("ApiScope", policy =>
+            {
+                policy.RequireAuthenticatedUser();
+                policy.RequireClaim("scope", "api");
+            })
+            .AddPolicy("M2mClient", policy =>
+            {
+                policy.RequireAuthenticatedUser();
+                policy.RequireClaim("client_id", "m2m");
+            });
 
         return services;
     }

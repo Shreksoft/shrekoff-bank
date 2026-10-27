@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Shreksoft.Bank.Api.Controllers.Clients;
 
+[Authorize(Policy = "ApiScope")]
 public class ClientsController : BaseApiController
 {
-    [Authorize]
+    [Authorize(Policy = "M2mClient")]
     [HttpPost("[action]")]
     public IActionResult Create(ClientDto dto, [FromServices] ClientService clientService)
     {
@@ -24,7 +25,6 @@ public class ClientsController : BaseApiController
         return CreatedAtAction(nameof(GetById), new { clientId }, new { id = clientId });
     }
 
-    [Authorize]
     [HttpGet("{clientId:guid}")]
     public IActionResult GetById(Guid clientId, [FromServices] ClientService clientService)
     {
