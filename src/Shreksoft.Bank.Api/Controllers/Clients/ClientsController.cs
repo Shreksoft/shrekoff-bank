@@ -1,4 +1,5 @@
-﻿using Shreksoft.Bank.Api.Controllers.Clients.Dto;
+﻿using Microsoft.AspNetCore.Authorization;
+using Shreksoft.Bank.Api.Controllers.Clients.Dto;
 using Shreksoft.Bank.Application.Clients;
 using Shreksoft.Bank.Core.Domain.Clients;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ namespace Shreksoft.Bank.Api.Controllers.Clients;
 
 public class ClientsController : BaseApiController
 {
+    [Authorize]
     [HttpPost("[action]")]
     public IActionResult Create(ClientDto dto, [FromServices] ClientService clientService)
     {
@@ -22,6 +24,7 @@ public class ClientsController : BaseApiController
         return CreatedAtAction(nameof(GetById), new { clientId }, new { id = clientId });
     }
 
+    [Authorize]
     [HttpGet("{clientId:guid}")]
     public IActionResult GetById(Guid clientId, [FromServices] ClientService clientService)
     {

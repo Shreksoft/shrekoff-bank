@@ -1,4 +1,5 @@
-﻿using Shreksoft.Bank.Api.Controllers.Accounts.Dto;
+﻿using Microsoft.AspNetCore.Authorization;
+using Shreksoft.Bank.Api.Controllers.Accounts.Dto;
 using Shreksoft.Bank.Application.Accounts;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,6 +7,7 @@ namespace Shreksoft.Bank.Api.Controllers.Accounts;
 
 public class AccountController : BaseApiController
 {
+    [Authorize]
     [HttpPost("[action]")]
     public IActionResult Create(CreateAccountDto dto, [FromServices] AccountService accountService)
     {
@@ -14,6 +16,7 @@ public class AccountController : BaseApiController
         return CreatedAtAction(nameof(GetAccountById), new { accountId }, new { id = accountId });
     }
 
+    [Authorize]
     [HttpGet("{accountId:guid}")]
     public IActionResult GetAccountById(Guid accountId, [FromServices] AccountService accountService)
     {
@@ -21,6 +24,7 @@ public class AccountController : BaseApiController
         return Ok(new { account });
     }
 
+    [Authorize]
     [HttpPost("[action]")]
     public IActionResult Transfer(TransferDto dto, [FromServices] AccountService accountService)
     {
@@ -29,6 +33,7 @@ public class AccountController : BaseApiController
         return Ok(new { guid });
     }
 
+    [Authorize]
     [HttpPut("[action]")]
     public IActionResult Deposit(DepositDto dto, [FromServices] AccountService accountService)
     {

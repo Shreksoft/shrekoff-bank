@@ -1,9 +1,22 @@
-@Api_HostAddress = http://localhost:8080
+@Api_HostAddress = http://localhost:5294
+@Idp_HostAddress = https://demo.duendesoftware.com
+
+###
+# @name GetToken
+POST {{Idp_HostAddress}}/connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&client_id=m2m.short&client_secret=secret&scope=api
+
+> {%
+    client.global.set("token", response.body.access_token);
+ %}
 
 ###
 # @name CreateClient
 POST {{Api_HostAddress}}/api/clients/create
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
     "firstName": "Иван",
@@ -15,21 +28,18 @@ Content-Type: application/json
 }
 
 > {%
-
-
- client.global.set("clientId", response.body.id);
-
-
+    client.global.set("clientId", response.body.id);
 %}
 
 ###
 GET {{Api_HostAddress}}/api/clients/{{clientId}}
 Content-Type: application/json
-
+Authorization: Bearer {{token}}
 
 ###
 POST {{Api_HostAddress}}/api/Account/create
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
     "clientId": "{{clientId}}",
@@ -37,24 +47,22 @@ Content-Type: application/json
 }
 
 > {%
-
-
  client.global.set("accountId", response.body.id);
-
-
 %}
 
 ###
 GET {{Api_HostAddress}}/api/Account/{{accountId}}
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 ###
 POST {{Api_HostAddress}}/api/Account/Transfer
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
-    "senderAccId": "f0cd28e2-7ffd-4b0f-81e3-d94accce566d",
-    "recipientAccId": "c0b139e4-d53a-4410-a5c0-235f84c17b83",
+    "senderAccId": "{{accountId}}",
+    "recipientAccId": "dab242c6-b825-467d-9229-eec767a60319",
     "amount": 22
 }
 
@@ -62,8 +70,9 @@ Content-Type: application/json
 ###
 PUT {{Api_HostAddress}}/api/Account/Deposit
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
     "accountId": "{{accountId}}",
-    "amount": 300.11122
+    "amount": 300
 }
