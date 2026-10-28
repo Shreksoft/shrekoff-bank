@@ -8,12 +8,10 @@ Banking system implemented in C#
 
 ## Stack
 
-- C#
-- PostgreSQL
 - .NET 10
+- PostgreSQL (EFCore)
 - xUnit
-- ASP.NET Core Web API
-- EF Core 10
+- Docker
 
 ## Getting Started
 
@@ -26,7 +24,8 @@ git clone git@github.com:Shreksoft/shrekoff-bank.git && cd shrekoff-bank
 
 ### Database migrations
 
-Migrations are applied automatically on startup, so no manual `dotnet ef database update` is needed
+> [!NOTE]
+>Migrations are applied automatically on startup, so nomanual `dotnet ef database update` is needed
 
 ### Launching application
 
@@ -42,6 +41,8 @@ cp .env.example .env
 # POSTGRES_DB=[your value]
 # POSTGRES_USER=[your value]
 # POSTGRES_PASSWORD=[your value] <- important
+
+# ASPNETCORE_ENVIRONMENT=Development <- if u want swagger
 ```
 
 ```shell
@@ -50,6 +51,7 @@ docker compose up -d
 ```
 
 #### .NET start
+
 >[!Warning]
 > For a local .NET run you need PostgreSQL running (locally or in Docker) on port 5432
 
@@ -57,7 +59,7 @@ docker compose up -d
 > You can change application port in `src/Shreksoft.Bank.Api/Properties/launchSettings.json` and set your database login/pass in `src/Shreksoft.Bank.Api/appsettings.Development.json`
 >
 
-> assuming the database is already running
+assuming the database is already running
 
 ```shell
 # application will start on port 5294
@@ -66,7 +68,13 @@ dotnet build --no-restore
 dotnet run --project src/Shreksoft.Bank.Api/Shreksoft.Bank.Api.csproj
 ```
 
-### Tests
+## Tests
+
+### Endpoints
+
+If `ASPNETCORE_ENVIRONMENT` is not set to `Production`, you can use [the swagger page](http://localhost:8080/swagger/index.html) to test the endpoints
+
+### Dotnet
 
 ```shell
 dotnet test

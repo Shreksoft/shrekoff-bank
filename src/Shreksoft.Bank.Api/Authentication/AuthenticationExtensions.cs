@@ -12,6 +12,7 @@ public class AuthSettings
     public AuthMode Mode { get; set; } = AuthMode.Jwt;
     public string? Audience { get; set; }
     public string? AuthorityUri { get; set; }
+    public string? TokenUri { get; set; }
 }
 
 public static class AuthenticationExtensions
