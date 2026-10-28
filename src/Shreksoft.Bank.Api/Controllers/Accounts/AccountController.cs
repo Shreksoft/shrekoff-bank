@@ -1,11 +1,14 @@
-﻿using Shreksoft.Bank.Api.Controllers.Accounts.Dto;
+﻿using Microsoft.AspNetCore.Authorization;
+using Shreksoft.Bank.Api.Controllers.Accounts.Dto;
 using Shreksoft.Bank.Application.Accounts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Shreksoft.Bank.Api.Controllers.Accounts;
 
+[Authorize(Policy = "ApiScope")]
 public class AccountController : BaseApiController
 {
+    [Authorize(Policy = "M2mClient")]
     [HttpPost("[action]")]
     public IActionResult Create(CreateAccountDto dto, [FromServices] AccountService accountService)
     {
@@ -21,6 +24,7 @@ public class AccountController : BaseApiController
         return Ok(new { account });
     }
 
+    [Authorize(Policy = "M2mClient")]
     [HttpPost("[action]")]
     public IActionResult Transfer(TransferDto dto, [FromServices] AccountService accountService)
     {
@@ -29,6 +33,7 @@ public class AccountController : BaseApiController
         return Ok(new { guid });
     }
 
+    [Authorize(Policy = "M2mClient")]
     [HttpPut("[action]")]
     public IActionResult Deposit(DepositDto dto, [FromServices] AccountService accountService)
     {

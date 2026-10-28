@@ -1,12 +1,15 @@
-﻿using Shreksoft.Bank.Api.Controllers.Clients.Dto;
+﻿using Microsoft.AspNetCore.Authorization;
+using Shreksoft.Bank.Api.Controllers.Clients.Dto;
 using Shreksoft.Bank.Application.Clients;
 using Shreksoft.Bank.Core.Domain.Clients;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Shreksoft.Bank.Api.Controllers.Clients;
 
+[Authorize(Policy = "ApiScope")]
 public class ClientsController : BaseApiController
 {
+    [Authorize(Policy = "M2mClient")]
     [HttpPost("[action]")]
     public IActionResult Create(ClientDto dto, [FromServices] ClientService clientService)
     {

@@ -2,6 +2,7 @@ using Shreksoft.Bank.Api.Middlewares;
 using Shreksoft.Bank.Application.Accounts;
 using Shreksoft.Bank.Application.Clients;
 using Shreksoft.Bank.Infrastructure.Data;
+using Shreksoft.Bank.Api.Authentication;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,9 +14,11 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 // Init DI for Core
-builder.Services.AddData(builder.Configuration);
-builder.Services.AddScoped<AccountService>();
-builder.Services.AddScoped<ClientService>();
+builder.Services
+    .AddData(builder.Configuration)
+    .AddAuth(builder.Configuration)
+    .AddScoped<AccountService>()
+    .AddScoped<ClientService>();
 
 // Create and run app
 var app = builder.Build();
@@ -29,6 +32,7 @@ if (app.Environment.IsDevelopment()) app.MapOpenApi();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<ExceptionMiddleware>();
